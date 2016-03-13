@@ -7,7 +7,7 @@
 
 #### Information Exchanges
 ##### Nominate Images - [see below](#nominate-images)
-##### Evaluate Images - [see below](#evaulate-images)
+##### Evaluate Images - [see below](#evaluate-images)
 ##### Get Detection Algorithms
 ###### Request
 - N/A
@@ -24,7 +24,7 @@ this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason,
 this operation would be helpful.
 
-##### Detect Shorelines - [see below](#detect-shorelines)
+##### Detect Shorelines - [see below](#detection-execution)
 ##### Get Status 
 ###### Request
 - Job ID
@@ -41,7 +41,7 @@ this operation would be helpful.
 ##### [Select Nomination Criteria](../Analyst/IdentifyNominationCriteria.md)
 ##### Select input parameters
 1. [Select Image to Analyze](../Analyst/SelectImage.md)
-1. [Select Detection Algorithm](../Analyst/DelectDetectionAlgorithm.md)
+1. [Select Detection Algorithm](../Analyst/SelectDetectionAlgorithm.md)
 
 ##### Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
@@ -103,8 +103,6 @@ TBD, technology-dependent
   - ID
   - Score
 
-###### Implementation Considerations
-
 #### Functional Requirements
 ##### Image Evaluation
 It is a too early to tell what criteria will be used to score these images.
@@ -134,6 +132,10 @@ to handle the credentials.
 
 ##### Report Shorelines
 ###### Request (POST)
+- URL derived from callback info
+- Job ID derived from callback info
+- Proposed shorelines (GeoJSON)
+
 - Job ID
 - Proposed shorelines (GeoJSON)
 
