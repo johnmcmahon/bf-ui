@@ -22,7 +22,7 @@ this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason,
 this operation would be helpful.
 
-##### Detect Shorelines - [see below](#detect-shorelines)
+##### Detect Shorelines - [see below](#detection-execution)
 ##### Get Status 
 ###### Request
 - Job ID
@@ -38,7 +38,7 @@ this operation would be helpful.
 #### Functional Requirements
 ##### Select input parameters
 1. [Select Image to Analyze](../Analyst/SelectImage.md)
-1. [Select Detection Algorithm](../Analyst/DelectDetectionAlgorithm.md)
+1. [Select Detection Algorithm](../Analyst/SelectDetectionAlgorithm.md)
 
 ##### Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
@@ -68,7 +68,8 @@ to handle the credentials.
 
 ##### Report Shorelines
 ###### Request (POST)
-- Job ID
+- URL derived from callback info
+- Job ID derived from callback info
 - Proposed shorelines (GeoJSON)
 
 ###### Response N/A
