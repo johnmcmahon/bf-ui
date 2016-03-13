@@ -3,11 +3,12 @@
 ## Who: Analyst
 
 ## What: Review and edit proposed shoreline vector data
-Display proposed shoreline vector data in an appropriate map view with the following layers:
-- imagery basemap
-- image used to collect shoreline vectors
-- baseline shoreline data
-- proposed shoreline data
+1. Display a map view with the following layers:
+   - imagery basemap
+   - image used to collect shoreline vectors
+   - baseline shoreline data
+   - proposed shoreline data
+1. Edit the proposed shoreline data
 
 ## Why: [justification]
 
@@ -17,4 +18,4 @@ We would need for our GIS analysts to try out this operation and produce TTPs (t
 It is possible that we would be able to provide to streamline the TTPs over time.
 
 ## Where
-* [Use Case](../UseCases/ShorelineDetection1.md#detection-execution)
+* [Use Case](../UseCases/ShorelineDetection1.md)
