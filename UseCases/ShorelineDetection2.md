@@ -1,9 +1,27 @@
 # Shoreline Detection 2
+This is an extension of [Use Case 1](ShorelineDetection1.md).
+- This workflow introduces an image catalog that contains metadata about available images
+- The analyst provides nomination criteria and a service returns descriptions of images that match
+- Those image descriptors are evaluated for fitness based on metadata including cloud cover, date, etc.
+- The analyst chooses images and the process proceeds as before
 
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=D9axg9OAxnfJh6duGlpZ"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAyCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QABw1QaWF6emEKCk5vdGUgb3ZlcgAeCCwAFAc6IAogIFByZWNvbmRpdGlvbnM6IFNlcnZpY2UgcmVnaXN0cmF0aW9uLCBNZXRhZGF0YSBoYXJ2ZXN0aW5nCmVuZCBub3RlCgoAdgctPgCAfwc6IFNlbGVjdCBBT0kAEwtyZWYAgQEGAHYIRGlzYwCBEwVDYW5kaWRhdGUgSW1hZ2VzCiAgU2VlIE5vbWluAAsLZW5kIHJlZi0tPgBgCgAqEQBVG0V2YWx1YXRlAFgYABcJAFUbAIEcBSBTY29yAF8NAIFqEGkAIgV0byBhbmFseXplCgpvcHQgaWYgbmVlZGVkCiAAgyoILT4AgwQIR2V0AINuB2lvbiBBbGdvcml0aG1zCiAAg0MHAIFrDQAVFWVuZCAAglQdAIRFDwCCYQgABhIAglcUQWNrbm93bGVkZ2VtZW50AINkFEluc3AAg3QFABsQbG9vcCBSZWN1cnJpbmcAgWcYU3RhdHVzCiAgYWx0IE9wZQCEeQYgQ29tcGxldGUKICAAggMJAIRiClByb3Bvc2VkAIFJDmVsc2UgSW5jAB4dAGcJZW5kCmVuZACFNxRSZXZpZXcgcABeCHMAgjMK&s=magazine&h=QNPoqJueVeUx70un)
+
+#### Preconditions
+These activities are out of scope for this use case, but required for it to be successful.
+
+##### Service Registration
+- [ ] service reporting the available detection algorithms
+- [ ] pzsvc-nominator
+- [ ] pzsvc-bf-eval
+- [ ] pzsvc-bf
+
+##### Metadata Harvesting
+- [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
+- [ ] The image catalog must be populated with metadata about available images from each image archive.
 
 #### Information Exchanges
 ##### Nominate Images - [see below](#nominate-images)
@@ -19,10 +37,8 @@
   - Description
 
 ###### Implementation Considerations
-1. If the available algorithms are expected to be stable, 
-this operation is unnecessary.
-2. If users are constrained from using certain algorithms for some reason,
-this operation would be helpful.
+1. If the available algorithms are expected to be stable, this operation is unnecessary.
+2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
 ##### Detect Shorelines - [see below](#detection-execution)
 ##### Get Status 
@@ -105,8 +121,8 @@ TBD, technology-dependent
 
 #### Functional Requirements
 ##### Image Evaluation
-It is a too early to tell what criteria will be used to score these images.
-Some testing will need to be performed. 
+It is a too early to tell what criteria will be used to score these images but cloud cover and image resolution are obvious ones.
+Some testing will need to be performed to determine what makes a good candidate image. 
 It is possible that this operation will have to reach back to the Image Catalog or even the Image Archive.
 
 ### Detection Execution
