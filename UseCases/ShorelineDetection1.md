@@ -9,9 +9,11 @@
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAxCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QABw1QaWF6emEKCk5vdGUgb3ZlcgAeCCwAFAc6IAogIFByZWNvbmRpdGlvbnM6IFNlcnZpY2UgcmVnaXN0cmF0aW9uCmVuZCBub3RlCgoAYQctPgBqBzogU2VsZWN0IGltYWdlIHRvIGFuYWx5egAfDHJlZgB5BgBuCACBSxBzCiAgU2UAgWEScwB0BXJlZi0tPgBnCnByb3Bvc2VkIHMANgoAgQUTUmV2aWV3ABkV&s=magazine&h=8DBkhQ_DauiElTPS)
 
 #### Preconditions
+These activities are out of scope for this use case, but required for it to be successful.
+
 ##### Service Registration
-- pzsvc-bf
-- Whatever service reports which detection algorithms are available
+- [ ] pzsvc-bf
+- [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
 ##### Get Detection Algorithms
