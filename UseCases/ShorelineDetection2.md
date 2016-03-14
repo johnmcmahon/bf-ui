@@ -84,12 +84,6 @@ The acknowledgement will provide either an error message or a job ID that can be
   - Description
   - Thumbnail URI
 
-###### Implementation Considerations
-1. If the Image Archive is not controlled by us, 
-it may have its own authentication and authorization system. 
-If so, it may be necessary to build an additional Piazza service
-to handle the credentials.
-
 ##### Query Catalog
 ###### Request
 TBD, technology-dependent.
