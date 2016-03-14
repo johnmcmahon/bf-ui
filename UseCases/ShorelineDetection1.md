@@ -1,9 +1,17 @@
 # Shoreline Detection 1
+- This is a simple workflow showing the ability to submit an image to Piazza and get back a set of candidate shorelines.
+- There is an optional step of querying Piazza for which detection algorithms are available.
+- Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=LhPYRz-eoRRS6HKebjAy"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAxCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QABw1QaWF6emEKCk5vdGUgb3ZlcgAeCCwAFAc6IAogIFByZWNvbmRpdGlvbnM6IFNlcnZpY2UgcmVnaXN0cmF0aW9uCmVuZCBub3RlCgoAYQctPgBqBzogU2VsZWN0IGltYWdlIHRvIGFuYWx5egAfDHJlZgB5BgBuCACBSxBzCiAgU2UAgWEScwB0BXJlZi0tPgBnCnByb3Bvc2VkIHMANgoAgQUTUmV2aWV3ABkV&s=magazine&h=8DBkhQ_DauiElTPS)
+
+#### Preconditions
+##### Service Registration
+- pzsvc-bf
+- Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
 ##### Get Detection Algorithms
