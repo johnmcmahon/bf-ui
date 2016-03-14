@@ -16,22 +16,6 @@ These activities are out of scope for this use case, but required for it to be s
 - [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
-##### Get Detection Algorithms
-###### Request
-- N/A
-
-###### Response
-- Available Algorithms (JSON)
-  - ID
-  - Name
-  - Description
-
-###### Implementation Considerations
-1. If the available algorithms are expected to be stable, 
-this operation is unnecessary.
-2. If users are constrained from using certain algorithms for some reason,
-this operation would be helpful.
-
 ##### Detect Shorelines - [see below](#detection-execution)
 ##### Get Status 
 ###### Request
