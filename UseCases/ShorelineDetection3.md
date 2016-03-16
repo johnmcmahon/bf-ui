@@ -134,7 +134,7 @@ Here we are storing the location of the detected features so that they can be re
 - [Image Descriptor](#image-descriptors) 
 
 ###### Response
-- [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
+- [Image Descriptor](#image-descriptors) including Beachfront Evaluation Score
 
 #### Functional Requirements
 ##### Image Evaluation
@@ -163,11 +163,11 @@ it may have its own authentication and authorization system.
 If so, it may be necessary to build an additional Piazza service
 to handle the credentials.
 
-##### Report Shorelines
+##### Report Detected Shorelines
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- Proposed shorelines (GeoJSON)
+- [Detected shorelines](#detected-shorelines)
 
 ###### Response N/A
 
