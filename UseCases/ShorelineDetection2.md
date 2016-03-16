@@ -53,8 +53,8 @@ These activities are out of scope for this use case, but required for it to be s
   - Beachfront Evaluation Score
 
 ###### Execution Steps
-1. Nominate Images - [see below](#nominate-images-1)
-1. Evaluate Images - [see below](#evaluate-images)
+1. [Nominate Images](#nominate-images-1)
+1. [Evaluate Images](#evaluate-images)
 
 ##### Get Detection Algorithms
 ###### Request
@@ -70,7 +70,15 @@ These activities are out of scope for this use case, but required for it to be s
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
-##### Detect Shorelines - [see below](#detection-execution)
+##### Detect Shorelines (Analyst)
+###### Request
+- Input Image (URI)
+- Algorithm(s) to use
+- Other parameters (TBD)
+
+###### Response
+- Acknowledgement
+
 ##### Get Status 
 ###### Request
 - Job ID
@@ -179,6 +187,10 @@ to handle the credentials.
 
 #### Functional Requirements
 ##### Validate Input
+1. Check that algorithm is available
+2. Check that the image is available
+3. Check other parameters (if needed)
+
 ##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-pzsvc-bf-algofind will route the request to the appropriate algorithm.
+1. Route the request to the appropriate algorithm.
 
