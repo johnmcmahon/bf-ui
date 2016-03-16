@@ -3,6 +3,17 @@
 - There is an optional step of querying Piazza for which detection algorithms are available.
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
+## Data Models
+### Proposed Shorelines
+GeoJSON
+- geometry
+- properties
+  - GEOINT_ID (int or string)
+  - COLLECTION_PLATFORM (string)
+  - DATE_TIME (ISO-8601 string)
+  - RESOLUTION (float)
+  - CV_ALGORITHM_NAME (string)
+
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=LhPYRz-eoRRS6HKebjAy"/>
@@ -12,7 +23,7 @@
 These activities are out of scope for this use case, but required for it to be successful.
 
 ##### Service Registration
-- [ ] pzsvc-bf
+- [ ] pzsvc-bf-algofind
 - [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
@@ -23,11 +34,7 @@ These activities are out of scope for this use case, but required for it to be s
 
 ###### Response
 - Job Status
-- Candidate Shorelines (GeoJSON)
-
-###### Implementation Considerations
-1. Is GeoJSON robust enough for this operation?
-1. What properties other than the geometry itself need to be populated?
+- [Proposed shorelines](#proposed-shorelines)
 
 #### Functional Requirements
 ##### Select input parameters
@@ -64,11 +71,12 @@ to handle the credentials.
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- Proposed shorelines (GeoJSON)
+- [Proposed shorelines](#proposed-shorelines)
 
 ###### Response N/A
 
 #### Functional Requirements
 ##### Validate Input
 ##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+pzsvc-bf-algofind will route the request to the appropriate algorithm.
 
