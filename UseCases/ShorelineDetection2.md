@@ -169,7 +169,7 @@ it may have its own authentication and authorization system.
 If so, it may be necessary to build an additional Piazza service
 to handle the credentials.
 
-##### Report Shorelines
+##### Report Detected Shorelines
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
