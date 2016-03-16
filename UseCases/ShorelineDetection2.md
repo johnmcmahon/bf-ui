@@ -5,6 +5,17 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Those image descriptors are evaluated for fitness based on metadata including cloud cover, date, etc.
 - The analyst chooses images and the process proceeds as before
 
+## Data Models
+### Proposed Shorelines
+GeoJSON
+- geometry
+- properties
+  - GEOINT_ID (int or string)
+  - COLLECTION_PLATFORM (string)
+  - DATE_TIME (ISO-8601 string)
+  - RESOLUTION (float)
+  - CV_ALGORITHM_NAME (string)
+
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=D9axg9OAxnfJh6duGlpZ"/>
@@ -17,15 +28,34 @@ These activities are out of scope for this use case, but required for it to be s
 - [ ] service reporting the available detection algorithms
 - [ ] pzsvc-nominator
 - [ ] pzsvc-bf-eval
-- [ ] pzsvc-bf
+- [ ] pzsvc-bf-algofind
 
 ##### Metadata Harvesting
 - [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
 - [ ] The image catalog must be populated with metadata about available images from each image archive.
 
 #### Information Exchanges
-##### Nominate Images - [see below](#nominate-images)
-##### Evaluate Images - [see below](#evaluate-images)
+##### Nominate Images
+###### Request (Analyst)
+- Image criteria (JSON)
+  - Spatial extents (GeoJSON geometry)
+  - Temporal extents (ISO-8601?)
+  - Other criteria TBD
+- Continuation Options (execute Evaluate Images)
+
+###### Response (Piazza, via Evaluate Images)
+- Image descriptors (JSON) 
+  - ID
+  - URI
+  - Name
+  - Description
+  - Thumbnail URI
+  - Beachfront Evaluation Score
+
+###### Execution Steps
+1. Nominate Images - [see below](#nominate-images-1)
+1. Evaluate Images - [see below](#evaluate-images)
+
 ##### Get Detection Algorithms
 ###### Request
 - N/A
@@ -47,14 +77,14 @@ These activities are out of scope for this use case, but required for it to be s
 
 ###### Response
 - Job Status
-- Candidate Shorelines (GeoJSON) - if operation complete
-
-###### Implementation Considerations
-1. Is GeoJSON robust enough for this operation?
-1. What properties other than the geometry itself need to be presented in the output?
+- If complete
+  - [Proposed shorelines](#proposed-shorelines)
 
 #### Functional Requirements
 ##### [Select Nomination Criteria](../Analyst/IdentifyNominationCriteria.md)
+##### Forward Candidate Images
+The candidate images get redirected from the nominator to the evaluator.
+
 ##### Select input parameters
 1. [Select Image to Analyze](../Analyst/SelectImage.md)
 1. [Select Detection Algorithm](../Analyst/SelectDetectionAlgorithm.md)
@@ -74,7 +104,6 @@ The acknowledgement will provide either an error message or a job ID that can be
   - Spatial extents (GeoJSON geometry)
   - Temporal extents (ISO-8601?)
   - Other criteria TBD
-- Continuation Options (execute Evaluate Images)
 
 ###### Response
 - Image descriptors (JSON) 
@@ -111,7 +140,7 @@ TBD, technology-dependent
 ###### Response
 - Updated Image descriptors (JSON)
   - ID
-  - Score
+  - Beachfront Evaluation Score
 
 #### Functional Requirements
 ##### Image Evaluation
@@ -144,14 +173,12 @@ to handle the credentials.
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- Proposed shorelines (GeoJSON)
-
-- Job ID
-- Proposed shorelines (GeoJSON)
+- [Proposed shorelines](#proposed-shorelines)
 
 ###### Response N/A
 
 #### Functional Requirements
 ##### Validate Input
 ##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+pzsvc-bf-algofind will route the request to the appropriate algorithm.
 
