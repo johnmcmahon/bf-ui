@@ -6,9 +6,19 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - The analyst chooses images and the process proceeds as before
 
 ## Data Models
-### Proposed Shorelines
-GeoJSON
-- geometry
+### Image Descriptors
+- JSON
+  - ID
+  - URI
+  - Name
+  - Description
+  - Thumbnail URI
+  - Beachfront Evaluation Score (if available)
+
+### Detected Shorelines
+GeoJSON Feature Collection
+- features
+  - geometry
 - properties
   - GEOINT_ID (int or string)
   - COLLECTION_PLATFORM (string)
@@ -44,13 +54,7 @@ These activities are out of scope for this use case, but required for it to be s
 - Continuation Options (execute Evaluate Images)
 
 ###### Response (Piazza, via Evaluate Images)
-- Image descriptors (JSON) 
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
-  - Beachfront Evaluation Score
+- [Image Descriptors](#image-descriptors) 
 
 ###### Execution Steps
 1. [Nominate Images](#nominate-images-1)
@@ -86,7 +90,7 @@ These activities are out of scope for this use case, but required for it to be s
 ###### Response
 - Job Status
 - If complete
-  - [Proposed shorelines](#proposed-shorelines)
+  - [Detected shorelines](#detected-shorelines)
 
 #### Functional Requirements
 ##### [Select Nomination Criteria](../Analyst/IdentifyNominationCriteria.md)
@@ -114,12 +118,7 @@ The acknowledgement will provide either an error message or a job ID that can be
   - Other criteria TBD
 
 ###### Response
-- Image descriptors (JSON) 
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
+- [Image Descriptors](#image-descriptors) 
 
 ##### Query Catalog
 ###### Request
@@ -138,17 +137,10 @@ TBD, technology-dependent
 #### Information Exchanges
 ##### Evaluate Images
 ###### Request
-- Image descriptors (JSON) 
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
+- [Image Descriptors](#image-descriptors) 
 
 ###### Response
-- Updated Image descriptors (JSON)
-  - ID
-  - Beachfront Evaluation Score
+- [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
 
 #### Functional Requirements
 ##### Image Evaluation
@@ -181,7 +173,7 @@ to handle the credentials.
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- [Proposed shorelines](#proposed-shorelines)
+- [Detected shorelines](#detected-shorelines)
 
 ###### Response N/A
 

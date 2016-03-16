@@ -4,9 +4,10 @@
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Data Models
-### Proposed Shorelines
-GeoJSON
-- geometry
+### Detected Shorelines
+GeoJSON Feature Collection
+- features
+  - geometry
 - properties
   - GEOINT_ID (int or string)
   - COLLECTION_PLATFORM (string)
@@ -34,7 +35,7 @@ These activities are out of scope for this use case, but required for it to be s
 
 ###### Response
 - Job Status
-- [Proposed shorelines](#proposed-shorelines)
+- [Detected shorelines](#detected-shorelines)
 
 #### Functional Requirements
 ##### Select input parameters
@@ -71,7 +72,7 @@ to handle the credentials.
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- [Proposed shorelines](#proposed-shorelines)
+- [Detected shorelines](#detected-shorelines)
 
 ###### Response N/A
 

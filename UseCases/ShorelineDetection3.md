@@ -1,9 +1,30 @@
 # Shoreline Detection 3
-This is an extension of [Use Case 1](ShorelineDetection1.md) that introduces different concepts than [Use Case 1](ShorelineDetection2.md).
-- This workflow introduces an image catalog that contains metadata about available images
-- The analyst provides nomination criteria and a service returns descriptions of images that match
-- Those image descriptors are evaluated for fitness based on metadata including cloud cover, date, etc.
-- The analyst chooses images and the process proceeds as before
+This is an extension of [Use Case 1](ShorelineDetection1.md) that introduces different concepts than [Use Case 2](ShorelineDetection2.md). Use Cases 2 and 3 do not have to be developed sequentially.
+- In this workflow the analyst establishes a standing query to initiate shoreline detection whenever relevant images are added to the Image Archive.
+- The Image Archive sends an event to Piazza reporting the presence of a new image.
+- The Piazza Workflow Manager inspects the image metadata (calling the Evaluation Service), and if it is conformant, it initiates a detection operation and stores the results for future use.
+- The analyst receives feedback on the operation through a dashboard.
+
+## Data Models
+### Image Descriptors
+- JSON
+  - ID
+  - URI
+  - Name
+  - Description
+  - Thumbnail URI
+  - Beachfront Evaluation Score (if available)
+
+### Detected Shorelines
+GeoJSON Feature Collection
+- features
+  - geometry
+- properties
+  - GEOINT_ID (int or string)
+  - COLLECTION_PLATFORM (string)
+  - DATE_TIME (ISO-8601 string)
+  - RESOLUTION (float)
+  - CV_ALGORITHM_NAME (string)
 
 ## Concept of Operations
 ### High Level
@@ -15,17 +36,14 @@ These activities are out of scope for this use case, but required for it to be s
 
 ##### Service Registration
 - [ ] service reporting the available detection algorithms
-- [ ] pzsvc-nominator
 - [ ] pzsvc-bf-eval
-- [ ] pzsvc-bf
+- [ ] pzsvc-bf-broker
+- [ ] pzsvc-bf-algofind
 
-##### Metadata Harvesting
-- [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
-- [ ] The image catalog must be populated with metadata about available images from each image archive.
+##### Image Archive Listener
+- [ ] When a new image is added to the image archive, a message is automatically sent to Piazza. 
 
 #### Information Exchanges
-##### Nominate Images - [see below](#nominate-images)
-##### Evaluate Images - [see below](#evaluate-images)
 ##### Get Detection Algorithms
 ###### Request
 - N/A
@@ -40,78 +58,83 @@ These activities are out of scope for this use case, but required for it to be s
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
-##### Detect Shorelines - [see below](#detection-execution)
-##### Get Status 
-###### Request
-- Job ID
-
-###### Response
-- Job Status
-- Candidate Shorelines (GeoJSON) - if operation complete
-
-###### Implementation Considerations
-1. Is GeoJSON robust enough for this operation?
-1. What properties other than the geometry itself need to be presented in the output?
-
-#### Functional Requirements
-##### [Select Nomination Criteria](../Analyst/IdentifyNominationCriteria.md)
-##### Select input parameters
-1. [Select Image to Analyze](../Analyst/SelectImage.md)
-1. [Select Detection Algorithm](../Analyst/SelectDetectionAlgorithm.md)
-
-##### Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
-
-##### [Review Proposed Shorelines](../Analyst/ReviewProposedShorelines.md)
-
-### Nominate Images
-<img src="http://www.websequencediagrams.com/files/render?link=V6sq6BnaasTC2GzORrB4"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTm9taW5hdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1uADAGb3IgYXMADQYAKw0ARwUgQ2F0YWxvZyBhcyBpYwoKTm90ZSBvdmVyAFAHLCBpYzoKICBJIHNlZSB0aGlzIGFzIGEgY29udmVuaWVuY2UgQVBJIGZvciBhbgBGDi4KICBUaGUgdGVjaG5vbG9neSBiZWhpbmQgdGhlIGMAcgdpcyBzdWJqZWN0IHRvIGNoYW5nZQogIGFuZCB3ZSBuZWVkIGEgd2F5IHRvIGFic3RyYWN0AIEDBmZvciBjbGllbnQgdXNlLgplbmQgbm90ZQoKAIINBi0-AIIDBToAgjcIaW9uIENyaXRlcmlhCgoAgh4GABsIY29uc3RydWN0IHF1ZXJ5ABYJaWM6IFF1ZXJ5AIIhCAppACsKAII0CFJlc3VsdHMASwkAgwwGOgCCWwdEZXNjcmlwdG9ycwo&s=magazine&h=AbGbJgMOZYAxx57e)
-
-#### Information Exchanges
-##### Nominate Images
+##### Initiate Standing Query
 ###### Request
 - Image criteria (JSON)
   - Spatial extents (GeoJSON geometry)
   - Temporal extents (ISO-8601?)
   - Other criteria TBD
-- Continuation Options (execute Evaluate Images)
 
 ###### Response
-- Image descriptors (JSON) 
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
+- Acknowledgement
+  - Output channel?
 
-##### Query Catalog
+##### New Image Event
 ###### Request
-TBD, technology-dependent.
+- [Image Descriptor](#image-descriptors) 
 
-###### Response
+###### Response N/A
+
+##### Get Dashboard
+###### Request
 TBD
 
+###### Response
+Among other things...
+- [Detected Shorelines - properties](#detected-shorelines)
+
 #### Functional Requirements
-##### Construct query
-TBD, technology-dependent
+##### Receive New Image
+Out of scope of this use case.
+
+##### Process Incoming Image - [See below](#process-incoming-image)
+
+##### [Review Proposed Shorelines](../Analyst/ReviewProposedShorelines.md)
+
+### Process Incoming Image
+<img src="http://www.websequencediagrams.com/files/render?link=ySQrO8WN6BUfEouHN4xr"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUHJvY2VzcyBJbmNvbWluZyBJbWFnZQoKcGFydGljaXBhbnQgUGlhenphAAYNcHpzdmMtYmYtYnJva2VyIGFzAA0GACsNAEYFIEFyY2hpdmUgYXMgaQA3DkZlYXR1cmUgUmVwb3NpdG9yeSBhcyBmcgoKYXV0b251bWJlciAxCgoAegYgLT4AcQY6AIEdGHJlZiBvdmVyAIEEByAgU2VlOiBFdmFsdWF0ZQCBVAZzCiAAgSsSY3RzIGFzIENsaWVudAplbmQgcmVmCgpvcACBPAhjb25mb3JtcwogIABXDiwgaWEKICAgIERldGVjdCBTaG9yZWxpbgBjBQB6BwAVBmlvbiBFeGVjdXRpb24KICAAXQkAgQgIPmZyAIFVBXBvc2VkADsOZnIAGAZTdG9yZQCCLwgAEgctPj4Agg8HABAIJyBMb2NhAGAHAIMjBi0-PgCDPwYATRUgCiAAg10HLQAdCmVyc2lzAIFEDWVuZAo&s=magazine&h=YtrgzBeRuU0H9Khl)
+
+#### Information Exchanges
+##### Process Incoming Image
+###### Request
+- [Image Descriptor](#image-descriptors) 
+
+###### Response
+- Acknowledgement
+
+##### Store Detected Shorelines
+###### Request 
+- [Detected shorelines](#detected-shorelines)
+
+###### Response
+- URL of location
+
+##### Detection Report
+###### Request (POST)
+- Status: complete
+- URL of features in feature repository
+
+###### Response N/A
+
+#### Functional Requirements
+##### Evaluate Images - [see below](#evaluate-images)
+##### Detect Shorelines - [see below](#detection-execution)
+##### Store Features
+Here we are storing the actual GeoJSON for future access
+ 
+##### Persist Features' Location
+Here we are storing the location of the detected features so that they can be returned as part of a dashboard request.
 
 ### Evaluate Images
 <img src="http://www.websequencediagrams.com/files/render?link=RKFILTktpWHhaKwZnsII"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRXZhbHVhdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1iZi1ldmFsIGFzAAsGCgoAJQYtPgAbBToASAYgRGVzY3JpcHRvcnMKbG9vcCBlYWNoIGltYWdlCiAARAcAJA4AgQgHaW9uCmVuZAoAHAcAgQIGOiBVcGRhdGVkAEsT&s=magazine&h=vUmYQvEGSX59HFGW)
 
 #### Information Exchanges
-##### Evaluate Images
+##### Evaluate Image
 ###### Request
-- Image descriptors (JSON) 
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
+- [Image Descriptor](#image-descriptors) 
 
 ###### Response
-- Updated Image descriptors (JSON)
-  - ID
-  - Score
+- [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
 
 #### Functional Requirements
 ##### Image Evaluation
@@ -146,12 +169,14 @@ to handle the credentials.
 - Job ID derived from callback info
 - Proposed shorelines (GeoJSON)
 
-- Job ID
-- Proposed shorelines (GeoJSON)
-
 ###### Response N/A
 
 #### Functional Requirements
 ##### Validate Input
+1. Check that algorithm is available
+2. Check that the image is available
+3. Check other parameters (if needed)
+
 ##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+1. Route the request to the appropriate algorithm.
 
