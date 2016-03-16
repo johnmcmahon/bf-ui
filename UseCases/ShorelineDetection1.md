@@ -23,9 +23,11 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
+##### Service Deployment
+- [ ] pzsvc-bf-algofind
+
 ##### Service Registration
 - [ ] pzsvc-bf-algofind
-- [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
 ##### Detect Shorelines - [see below](#detection-execution)
