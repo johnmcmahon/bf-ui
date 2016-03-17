@@ -1,6 +1,5 @@
 # Shoreline Detection 1
 - This is a simple workflow showing the ability to submit an image to Piazza and get back a set of candidate shorelines.
-- There is an optional step of querying Piazza for which detection algorithms are available.
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Data Models
