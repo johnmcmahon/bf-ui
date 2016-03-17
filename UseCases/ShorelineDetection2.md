@@ -69,6 +69,7 @@ These activities are out of scope for this use case, but required for it to be s
   - ID
   - Name
   - Description
+  - Parameters
 
 ###### Implementation Considerations
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
