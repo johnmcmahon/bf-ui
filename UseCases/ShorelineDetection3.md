@@ -38,10 +38,10 @@ These activities are out of scope for this use case, but required for it to be s
 - [ ] service reporting the available detection algorithms
 - [ ] pzsvc-bf-eval
 - [ ] pzsvc-bf-broker
-- [ ] pzsvc-bf-algofind
+- [ ] pzsvc-exec
 
 ##### Image Archive Listener
-- [ ] When a new image is added to the image archive, a message is automatically sent to Piazza. 
+- [ ] When a new image is added to the image archive, an event message is automatically sent to Piazza. 
 
 #### Information Exchanges
 ##### Get Detection Algorithms
@@ -89,7 +89,7 @@ Out of scope of this use case.
 
 ##### Process Incoming Image - [See below](#process-incoming-image)
 
-##### [Review Proposed Shorelines](../Analyst/ReviewProposedShorelines.md)
+##### [Review Detected Shorelines](../Analyst/ReviewProposedShorelines.md)
 
 ### Process Incoming Image
 <img src="http://www.websequencediagrams.com/files/render?link=ySQrO8WN6BUfEouHN4xr"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUHJvY2VzcyBJbmNvbWluZyBJbWFnZQoKcGFydGljaXBhbnQgUGlhenphAAYNcHpzdmMtYmYtYnJva2VyIGFzAA0GACsNAEYFIEFyY2hpdmUgYXMgaQA3DkZlYXR1cmUgUmVwb3NpdG9yeSBhcyBmcgoKYXV0b251bWJlciAxCgoAegYgLT4AcQY6AIEdGHJlZiBvdmVyAIEEByAgU2VlOiBFdmFsdWF0ZQCBVAZzCiAAgSsSY3RzIGFzIENsaWVudAplbmQgcmVmCgpvcACBPAhjb25mb3JtcwogIABXDiwgaWEKICAgIERldGVjdCBTaG9yZWxpbgBjBQB6BwAVBmlvbiBFeGVjdXRpb24KICAAXQkAgQgIPmZyAIFVBXBvc2VkADsOZnIAGAZTdG9yZQCCLwgAEgctPj4Agg8HABAIJyBMb2NhAGAHAIMjBi0-PgCDPwYATRUgCiAAg10HLQAdCmVyc2lzAIFEDWVuZAo&s=magazine&h=YtrgzBeRuU0H9Khl)
@@ -102,28 +102,17 @@ Out of scope of this use case.
 ###### Response
 - Acknowledgement
 
-##### Store Detected Shorelines
-###### Request 
-- [Detected shorelines](#detected-shorelines)
-
-###### Response
-- URL of location
-
 ##### Detection Report
 ###### Request (POST)
 - Status: complete
-- URL of features in feature repository
+- [Detected shorelines](#detected-shorelines)
 
 ###### Response N/A
 
 #### Functional Requirements
 ##### Evaluate Images - [see below](#evaluate-images)
-##### Detect Shorelines - [see below](#detection-execution)
-##### Store Features
-Here we are storing the actual GeoJSON for future access
- 
-##### Persist Features' Location
-Here we are storing the location of the detected features so that they can be returned as part of a dashboard request.
+##### Assess Evaluations
+Here we are deteriming whether the image is suitable for shoreline detection. Details TBD.
 
 ### Evaluate Images
 <img src="http://www.websequencediagrams.com/files/render?link=RKFILTktpWHhaKwZnsII"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRXZhbHVhdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1iZi1ldmFsIGFzAAsGCgoAJQYtPgAbBToASAYgRGVzY3JpcHRvcnMKbG9vcCBlYWNoIGltYWdlCiAARAcAJA4AgQgHaW9uCmVuZAoAHAcAgQIGOiBVcGRhdGVkAEsT&s=magazine&h=vUmYQvEGSX59HFGW)
@@ -163,20 +152,35 @@ it may have its own authentication and authorization system.
 If so, it may be necessary to build an additional Piazza service
 to handle the credentials.
 
-##### Report Shorelines
+##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+###### Request (EXECUTE)
+- Executable
+- Parameters
+  - Input file name
+  - Output file name
+  - Other parameters TBD
+
+###### Response
+The executable will output its response in the file provided
+
+##### Report Detected Shorelines
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
-- Proposed shorelines (GeoJSON)
+- [Detected shorelines](#detected-shorelines)
 
 ###### Response N/A
 
 #### Functional Requirements
 ##### Validate Input
-1. Check that algorithm is available
-2. Check that the image is available
-3. Check other parameters (if needed)
+##### Prepare Algorithm Execution
+- Store Image Locally
+- Establish output file location
 
-##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-1. Route the request to the appropriate algorithm.
+##### Cleanup
+- Delete input file
+- Delete output file
 
+##### Process Results
+- Mark job complete
+- Store output in key/value store

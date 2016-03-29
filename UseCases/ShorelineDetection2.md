@@ -38,7 +38,7 @@ These activities are out of scope for this use case, but required for it to be s
 - [ ] service reporting the available detection algorithms
 - [ ] pzsvc-nominator
 - [ ] pzsvc-bf-eval
-- [ ] pzsvc-bf-algofind
+- [ ] pzsvc-exec
 
 ##### Metadata Harvesting
 - [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
@@ -104,7 +104,7 @@ The candidate images get redirected from the nominator to the evaluator.
 ##### Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
 
-##### [Review Proposed Shorelines](../Analyst/ReviewProposedShorelines.md)
+##### [Review Detected Shorelines](../Analyst/ReviewProposedShorelines.md)
 
 ### Nominate Images
 <img src="http://www.websequencediagrams.com/files/render?link=V6sq6BnaasTC2GzORrB4"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTm9taW5hdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1uADAGb3IgYXMADQYAKw0ARwUgQ2F0YWxvZyBhcyBpYwoKTm90ZSBvdmVyAFAHLCBpYzoKICBJIHNlZSB0aGlzIGFzIGEgY29udmVuaWVuY2UgQVBJIGZvciBhbgBGDi4KICBUaGUgdGVjaG5vbG9neSBiZWhpbmQgdGhlIGMAcgdpcyBzdWJqZWN0IHRvIGNoYW5nZQogIGFuZCB3ZSBuZWVkIGEgd2F5IHRvIGFic3RyYWN0AIEDBmZvciBjbGllbnQgdXNlLgplbmQgbm90ZQoKAIINBi0-AIIDBToAgjcIaW9uIENyaXRlcmlhCgoAgh4GABsIY29uc3RydWN0IHF1ZXJ5ABYJaWM6IFF1ZXJ5AIIhCAppACsKAII0CFJlc3VsdHMASwkAgwwGOgCCWwdEZXNjcmlwdG9ycwo&s=magazine&h=AbGbJgMOZYAxx57e)
@@ -169,7 +169,18 @@ it may have its own authentication and authorization system.
 If so, it may be necessary to build an additional Piazza service
 to handle the credentials.
 
-##### Report Shorelines
+##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+###### Request (EXECUTE)
+- Executable
+- Parameters
+  - Input file name
+  - Output file name
+  - Other parameters TBD
+
+###### Response
+The executable will output its response in the file provided
+
+##### Report Detected Shorelines
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
@@ -179,10 +190,14 @@ to handle the credentials.
 
 #### Functional Requirements
 ##### Validate Input
-1. Check that algorithm is available
-2. Check that the image is available
-3. Check other parameters (if needed)
+##### Prepare Algorithm Execution
+- Store Image Locally
+- Establish output file location
 
-##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-1. Route the request to the appropriate algorithm.
+##### Cleanup
+- Delete input file
+- Delete output file
 
+##### Process Results
+- Mark job complete
+- Store output in key/value store

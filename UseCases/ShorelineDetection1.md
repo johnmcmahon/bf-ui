@@ -24,7 +24,7 @@ GeoJSON Feature Collection
 These activities are out of scope for this use case, but required for it to be successful.
 
 ##### Service Registration
-- [ ] pzsvc-bf-algofind
+- [ ] pzsvc-exec
 - [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
@@ -45,7 +45,7 @@ These activities are out of scope for this use case, but required for it to be s
 ##### Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
 
-##### [Review Proposed Shorelines](../Analyst/ReviewProposedShorelines.md)
+##### [Review Detected Shorelines](../Analyst/ReviewProposedShorelines.md)
 
 ### Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
@@ -68,7 +68,18 @@ it may have its own authentication and authorization system.
 If so, it may be necessary to build an additional Piazza service
 to handle the credentials.
 
-##### Report Shorelines
+##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
+###### Request (EXECUTE)
+- Executable
+- Parameters
+  - Input file name
+  - Output file name
+  - Other parameters TBD
+
+###### Response
+The executable will output its response in the file provided
+
+##### Report Detected Shorelines
 ###### Request (POST)
 - URL derived from callback info
 - Job ID derived from callback info
@@ -78,6 +89,14 @@ to handle the credentials.
 
 #### Functional Requirements
 ##### Validate Input
-##### [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-pzsvc-bf-algofind will route the request to the appropriate algorithm.
+##### Prepare Algorithm Execution
+- Store Image Locally
+- Establish output file location
 
+##### Cleanup
+- Delete input file
+- Delete output file
+
+##### Process Results
+- Mark job complete
+- Store output in key/value store
