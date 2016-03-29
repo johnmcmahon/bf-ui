@@ -1,6 +1,5 @@
 # Shoreline Detection 1
 - This is a simple workflow showing the ability to submit an image to Piazza and get back a set of candidate shorelines.
-- There is an optional step of querying Piazza for which detection algorithms are available.
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Data Models
@@ -23,9 +22,11 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
+##### Service Deployment
+- [ ] pzsvc-bf-algofind
+
 ##### Service Registration
 - [ ] pzsvc-exec
-- [ ] Whatever service reports which detection algorithms are available
 
 #### Information Exchanges
 ##### Detect Shorelines - [see below](#detection-execution)

@@ -34,7 +34,7 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
-##### Service Registration
+##### Service Deployment and Registration
 - [ ] service reporting the available detection algorithms
 - [ ] pzsvc-bf-eval
 - [ ] pzsvc-bf-broker
@@ -123,7 +123,7 @@ Here we are deteriming whether the image is suitable for shoreline detection. De
 - [Image Descriptor](#image-descriptors) 
 
 ###### Response
-- [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
+- [Image Descriptor](#image-descriptors) including Beachfront Evaluation Score
 
 #### Functional Requirements
 ##### Image Evaluation

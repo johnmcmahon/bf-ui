@@ -34,7 +34,7 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
-##### Service Registration
+##### Service Deployment and Registration
 - [ ] service reporting the available detection algorithms
 - [ ] pzsvc-nominator
 - [ ] pzsvc-bf-eval
@@ -69,6 +69,7 @@ These activities are out of scope for this use case, but required for it to be s
   - ID
   - Name
   - Description
+  - Parameters
 
 ###### Implementation Considerations
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
