@@ -22,8 +22,10 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
-##### Service Deployment
+##### Cloud Deployment
 - [ ] pzsvc-exec
+- [ ] Detection algorithm
+- [ ] Input images
 
 ##### Service Registration
 - [ ] pzsvc-exec
@@ -42,9 +44,10 @@ The acknowledgement will provide either an error message or a job ID that can be
 
 ###### Response
 - Job Status
-- [Detected shorelines](#detected-shorelines)
+- If Complete
+  - [Detected shorelines](#detected-shorelines)
 
-#### Function: [Review Detected Shorelines](../Analyst/ReviewProposedShorelines.md)
+#### Function: Display Detected Shorelines
 
 ### Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
@@ -101,3 +104,4 @@ Cleanup activities like the following may be performed.
 #### Function: Process Results
 - Mark job complete
 - Store output in key/value store
+- Store key with job information
