@@ -26,6 +26,8 @@ GeoJSON Feature Collection
   - RESOLUTION (float)
   - CV_ALGORITHM_NAME (string)
 
+### Detection Analysis Results
+
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=D9axg9OAxnfJh6duGlpZ"/>
@@ -204,3 +206,59 @@ Cleanup activities like the following may be performed.
 - Mark job complete
 - Store output in key/value store
 - Store key with job information
+
+### Detection Review
+<img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
+[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUmV2aWV3IERldGVjdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0AAcNUGlhenphABoNRmVhdHVyZSBSZXBvc2l0b3J5IGFzIGZyAD8NYmYtYW5hbHl6ZQoKbm90ZSBvdmVyAFoILCBmciwAGAs6CiAgUHJlY29uZGl0aW9uczogQ2xvdWQgZGVwbG95bWVudCwgU2VydmljZSByZWdpc3RyYXRpb24sIGYAgQYHaG9zdGluZwplbmQgbm90ZQoKAIFHBy0-AIE9BjoAgXkSAIFWBi0tPj4AgXMHOiBBY2tub3dsZWRnZW1lbnQAGwgAOwlQcmVwYQCBdwV2aWV3ABYJZnI6IEdldCBCYXNlbGluZQCCHAhzCmZyAHcKAAwSAFcIAIIACwCDAAZ6ZSBMaW5lU3RyaW5ncwoAgkQKAB4OUGVyZm9ybSAAgmYFc2kAGw4AgXAIAINRBmlzIFJlc3VsdABsCmZyOiBTdG9yAIEkC2xvb3AgcmVjdXJyaW5nCiAAhAwIAII8CkdldCBTdGF0dXMKICBhbHQgT3BlAIMHBiBpbmNvbXBsZXRlCiAgIACENActAIJTCgAuCWVsc2UALQsAGB5Mb2MAWQZvZiBcbgCBPBEgIGVuZAplbmQK&s=magazine&h=bv3g9EzcODmTzsBD)
+
+#### Information Exchange: Review Detection
+###### Request
+- Detection Review Parameters
+  - Location of detected shorelines
+  - Bounding box of detected shorelines
+- Continuation Options
+  - Select baseline shorelines from feature repository
+  - Store baseline shorelines in key/value store
+  - Call bf-analyze with detected shorelines, detected shorelines
+
+###### Response
+- Acknowledgement
+
+#### Information Exchange: Get Baseline Features
+###### Request
+- Get Feature Request
+  - Bounding box of detected shorelines
+
+###### Response
+- Baseline shorelines (GeoJSON)
+
+#### Function: Provision Files
+1. Store baseline shorelines in key/value store
+1. Provision input files from key/value store
+  - detected shorelines
+  - baseline shorelines
+
+#### Information Exchange: Analyze LineStrings
+###### Request
+- Detected shorelines
+- Baseline shorelines
+
+###### Response
+[Detection Analysis Results](#detection-analysis-results)
+
+#### Function: Perform Analysis
+1. Qualitative analysis
+1. Quantitative analysis
+1. Write output file
+
+#### Function: Store Analysis Results
+
+#### Information Exchange: Get Status 
+###### Request
+- Job ID
+
+###### Response
+- Job Status
+- If complete
+  - [Detection Analysis Results](#detection-analysis-results)
+
