@@ -1,19 +1,44 @@
-# Shoreline Detection 2
+# Shoreline Detection MVP2
 This is an extension of [Use Case 1](ShorelineDetection1.md).
 - This workflow introduces an image catalog that contains metadata about available images
-- The analyst provides nomination criteria and a service returns descriptions of images that match
+- The analyst provides search criteria and a service returns descriptions of images that match
 - Those image descriptors are evaluated for fitness based on metadata including cloud cover, date, etc.
 - The analyst chooses images and the process proceeds as before
+- The analyst has the ability to review the results
 
 ## Data Models
+### Detection Algorithms
+- ID
+- Name
+- Description
+- Input constraints
+- Parameters
+
+### Detection Image Criteria
+- Date of Collection (ISO-8601)
+- Area of Interest (GeoJSON Geometry)
+- Maximum percentage of cloud cover
+- File format
+- Bit depth
+- Number of bands
+- Maximum file size
+
+### Detection Inputs
+- Image(s) (Data ID)
+- Area of Interest (GeoJSON Geometry)
+- Algorithm ID
+- Algorithm executable command
+   - Input file(s)
+   - Output file(s)
+   - Additional parameters
+
 ### Image Descriptors
-- JSON
-  - ID
-  - URI
-  - Name
-  - Description
-  - Thumbnail URI
-  - Beachfront Evaluation Score (if available)
+- ID
+- URI
+- Name
+- Description
+- Thumbnail URI
+- Beachfront Evaluation Score (if available)
 
 ### Detected Shorelines
 GeoJSON Feature Collection
@@ -27,6 +52,7 @@ GeoJSON Feature Collection
   - CV_ALGORITHM_NAME (string)
 
 ### Detection Analysis Results
+TBD
 
 ## Concept of Operations
 ### High Level
@@ -38,111 +64,98 @@ These activities are out of scope for this use case, but required for it to be s
 
 ##### Cloud Deployment
 - [ ] service reporting the available detection algorithms
-- [ ] pzsvc-nominator
+- [ ] pzsvc-search
 - [ ] pzsvc-bf-eval
 - [ ] pzsvc-exec
 - [ ] detection algorithms
+- [ ] pzsvc-bf-review
 
 ##### Service Registration
 - [ ] service reporting the available detection algorithms
-- [ ] pzsvc-nominator
+- [ ] pzsvc-search
 - [ ] pzsvc-bf-eval
 - [ ] pzsvc-exec
+- [ ] pzsvc-bf-review
 
 ##### Metadata Harvesting
 - [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
 - [ ] The image catalog must be populated with metadata about available images from each image archive.
 
-#### Function: [Select Nomination Criteria](../Analyst/IdentifyNominationCriteria.md)
-#### Information Exchange: Nominate Images
-###### Request (Analyst)
-- Image criteria (JSON)
-  - Spatial extents (GeoJSON geometry)
-  - Temporal extents (ISO-8601?)
-  - Other criteria TBD
-- Continuation Options (execute Evaluate Images)
-
-###### Response (Piazza, via Evaluate Images)
-- [Image Descriptors](#image-descriptors) 
-
-###### Execution Steps
-The candidate images get redirected from the nominator to the evaluator.
-1. [Nominate Images](#nominate-images-1)
-1. [Evaluate Images](#evaluate-images)
-
 #### Information Exchange: Get Detection Algorithms
 ###### Request
 - N/A
 
-###### Response
-- Available Algorithms (JSON)
-  - ID
-  - Name
-  - Description
-  - Parameters
+###### Response (JSON)
+[Detection Algorithms](#detection-algorithms)
 
 ###### Implementation Considerations
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
-#### Function: Select input parameters
-1. [Select Image to Analyze](../Analyst/SelectImage.md)
-1. [Select Detection Algorithm](../Analyst/SelectDetectionAlgorithm.md)
+#### Function: Display Detection Algorithms
+[Detection Algorithms](#detection-algorithms)
 
-#### Information Exchange: Detect Shorelines
+#### Function: Select Detection Image Criteria
+[Detection image criteria](#detection-image-criteria)
+
+#### Information Exchange: Discover Images - [see below](#discover-images)
+
+#### Function: Displayed Discovered Images
+- [Image Descriptors](#image-descriptors)
+
+#### Function: Select Input Parameters
+[Detection Inputs](#detection-inputs)
+
+#### Information Exchange: Ingest Image - [see below](#ingest-file)
+
+#### Information Exchange: Detect Shorelines - [see below](#detect-shorelines)
+
+#### Function: Review Detected Shorelines - [see below](#review-detected-shorelines)
+
+#### Information Exchange: Get Detected Shorelines
 ###### Request (Analyst)
-- Input Image (URI)
-- Algorithm(s) to use
-- Other parameters (TBD)
+- File identifier
 
 ###### Response (Piazza)
+- [Detected shorelines](#detected-shorelines)
+
+#### Information Exchange: File Request
+###### Request (Piazza)
+- File identifier
+
+###### Response (File Bucket)
+- [Detected shorelines](#detected-shorelines)
+
+#### Function: Display Detected Shorelines
+
+### Discover Images
+<img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)
+
+#### Information Exchange: Discover Images
+###### Request (Analyst)
+- [Detection image criteria](#detection-image-criteria) (JSON)
+- Continuation Options (execute Evaluate Images)
+
+###### Response
 - Acknowledgement
 
 #### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to [monitor status](#get-status).
+The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
 
-#### Information Exchange: Get Status 
-###### Request
-- Job ID
+#### Information Exchange: Search for Images
+###### Request (Analyst) (JSON)
+- [Detection image criteria](#detection-image-criteria)
 
-###### Response
-- Job Status
-- If complete
-  - [Detected shorelines](#detected-shorelines)
+###### Response (JSON)
+- [Image Descriptors](#image-descriptors)
 
-#### Function: [Review Detected Shorelines](../Analyst/ReviewProposedShorelines.md)
-
-### Nominate Images
-<img src="http://www.websequencediagrams.com/files/render?link=V6sq6BnaasTC2GzORrB4"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTm9taW5hdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1uADAGb3IgYXMADQYAKw0ARwUgQ2F0YWxvZyBhcyBpYwoKTm90ZSBvdmVyAFAHLCBpYzoKICBJIHNlZSB0aGlzIGFzIGEgY29udmVuaWVuY2UgQVBJIGZvciBhbgBGDi4KICBUaGUgdGVjaG5vbG9neSBiZWhpbmQgdGhlIGMAcgdpcyBzdWJqZWN0IHRvIGNoYW5nZQogIGFuZCB3ZSBuZWVkIGEgd2F5IHRvIGFic3RyYWN0AIEDBmZvciBjbGllbnQgdXNlLgplbmQgbm90ZQoKAIINBi0-AIIDBToAgjcIaW9uIENyaXRlcmlhCgoAgh4GABsIY29uc3RydWN0IHF1ZXJ5ABYJaWM6IFF1ZXJ5AIIhCAppACsKAII0CFJlc3VsdHMASwkAgwwGOgCCWwdEZXNjcmlwdG9ycwo&s=magazine&h=AbGbJgMOZYAxx57e)
-
-#### Information Exchange: Nominate Images
-###### Request
-- Image criteria (JSON)
-  - Spatial extents (GeoJSON geometry)
-  - Temporal extents (ISO-8601?)
-  - Other criteria TBD
-
-###### Response
-- [Image Descriptors](#image-descriptors) 
-
-#### Function: Construct query
-TBD, technology-dependent
-
-#### Information Exchange: Query Catalog
-###### Request
-TBD, technology-dependent.
-
-###### Response
-TBD
-
-### Evaluate Images
-<img src="http://www.websequencediagrams.com/files/render?link=RKFILTktpWHhaKwZnsII"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRXZhbHVhdGUgSW1hZ2VzCgpwYXJ0aWNpcGFudCBQaWF6emEABg1wenN2Yy1iZi1ldmFsIGFzAAsGCgoAJQYtPgAbBToASAYgRGVzY3JpcHRvcnMKbG9vcCBlYWNoIGltYWdlCiAARAcAJA4AgQgHaW9uCmVuZAoAHAcAgQIGOiBVcGRhdGVkAEsT&s=magazine&h=vUmYQvEGSX59HFGW)
+#### Function: Update Status
 
 #### Information Exchange: Evaluate Images
-###### Request
-- [Image Descriptors](#image-descriptors) 
+###### Request (JSON)
+- [Image Descriptors](#image-descriptors)
 
-###### Response
+###### Response (JSON)
 - [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
 
 #### Function: Image Evaluation
@@ -150,27 +163,74 @@ It is a too early to tell what criteria will be used to score these images but c
 Some testing will need to be performed to determine what makes a good candidate image. 
 It is possible that this operation will have to reach back to the Image Catalog or even the Image Archive.
 
+#### Function: Update Status
+
+#### Information Exchange: Get Status 
+###### Request
+- Job ID
+
+###### Response (JSON)
+- Job Status
+- If Complete
+  - [Image Descriptors](#image-descriptors) 
+
+### Ingest File
+<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
+
+#### Information Exchange: Ingest File 
+###### Request
+* File (POST) -OR-
+* File URL
+
+###### Response
+Acknowledgement
+
+#### Function: Inspect Acknowledgement
+The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+
+#### Information Exchange: Store File 
+###### Request
+* File (POST) -OR-
+* File URL
+
+###### Response N/A
+
+#### Function: Update Status
+
+#### Information Exchange: Get Status 
+###### Request
+- Job ID
+
+###### Response
+- Job Status
+- If Complete
+  - Location of Ingested File
+
 ### Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
 
-#### Information Exchange: Detect Shorelines
-###### Request (POST)
+#### Information Exchange: Detect Shorelines (Analyst)
+###### Request
 - Input Image(s) (URI)
 - Algorithm to use
 - Other algorithm-specific parameters
+
+###### Response
+- Acknowledgement
+
+#### Function: Inspect Acknowledgement
+The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+
+#### Information Exchange: Detect Shorelines (Piazza)
+###### Request (POST)
+[Detection Inputs](#detection-inputs)
 
 ###### Response
 Note: the connection stays open until the operation completes.
 - An appropriate error -OR-
 - Process outputs
   - [Detected shorelines](#detected-shorelines)
-
-###### Implementation Considerations
-1. If the Image Archive is not controlled by us, 
-it may have its own authentication and authorization system. 
-If so, it may be necessary to build an additional Piazza service
-to handle the credentials.
 
 #### Function: Validate Input
 
@@ -180,17 +240,9 @@ Image URL
 ###### Response
 Image file
 
-#### Function: Prepare Algorithm Execution
-- Store Image Locally
-- Establish output file location
-
 #### Information Exchange: [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
 ###### Request (EXECUTE)
-- Executable
-- Parameters
-  - Input file name(s)
-  - Output file name (if applicable)
-  - Other algorithm-specific parameters
+[Detection Inputs](#detection-inputs)
 
 ###### Response
 The executable may output its response in the file provided
@@ -202,10 +254,16 @@ Cleanup activities like the following may be performed.
 - Delete input file
 - Delete output file
 
-#### Function: Process Results
-- Mark job complete
-- Store output in key/value store
-- Store key with job information
+#### Function: Update Status
+
+#### Information Exchange: Get Status 
+###### Request
+- Job ID
+
+###### Response
+- Job Status
+- If Complete
+  - [Detected shorelines](#detected-shorelines)
 
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
@@ -261,4 +319,3 @@ Cleanup activities like the following may be performed.
 - Job Status
 - If complete
   - [Detection Analysis Results](#detection-analysis-results)
-

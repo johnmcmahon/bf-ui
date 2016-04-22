@@ -3,6 +3,15 @@
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Data Models
+### Detection Inputs
+- Image(s) (Data ID)
+- Area of Interest (GeoJSON Geometry)
+- Algorithm ID
+- Algorithm executable command
+   - Input file(s)
+   - Output file(s)
+   - Additional parameters
+
 ### Detected Shorelines
 GeoJSON Feature Collection
 - features
@@ -24,8 +33,8 @@ These activities are out of scope for this use case, but required for it to be s
 ##### Service Registration
 - [x] pzsvc-exec
 
-#### Function: Select input parameters
-1. [Select Image to Analyze](../Analyst/SelectImage.md)
+#### Function: Select Input Parameters
+[Detection Inputs](#detection-inputs)
 
 #### Information Exchange: Ingest File - [see below](#ingest-file)
 
@@ -92,11 +101,12 @@ The acknowledgement will provide either an error message or a job ID that can be
 ###### Response
 - Acknowledgement
 
+#### Function: Inspect Acknowledgement
+The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+
 #### Information Exchange: Detect Shorelines (Piazza)
 ###### Request (POST)
-- Input Image(s) (URI)
-- Algorithm to use
-- Other algorithm-specific parameters
+[Detection Inputs](#detection-inputs)
 
 ###### Response
 Note: the connection stays open until the operation completes.
@@ -114,11 +124,7 @@ Image file
 
 #### Information Exchange: [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
 ###### Request (EXECUTE)
-- Executable
-- Parameters
-  - Input file name(s)
-  - Output file name (if applicable)
-  - Other algorithm-specific parameters
+[Detection Inputs](#detection-inputs)
 
 ###### Response
 The executable may output its response in the file provided
