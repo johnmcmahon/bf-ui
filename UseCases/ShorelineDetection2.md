@@ -24,10 +24,9 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Maximum file size
 
 ### Detection Inputs
-- Image(s) (Data ID)
 - Algorithm ID
 - Algorithm executable command
-   - Input file(s)
+   - IDs of input file(s) 
    - Output file(s)
    - Additional parameters
 
