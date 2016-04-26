@@ -95,13 +95,7 @@ These activities are out of scope for this use case, but required for it to be s
 #### Function: Display Detection Algorithms
 - [Detection Algorithms](#detection-algorithms)
 
-#### Function: Select Detection Image Criteria
-- [Detection image criteria](#detection-image-criteria)
-
 #### Information Exchange: Discover Images - [see below](#discover-images)
-
-#### Function: Displayed Discovered Images
-- [Image Descriptors](#image-descriptors)
 
 #### Function: Select Input Parameters
 - [Detection Inputs](#detection-inputs)
@@ -116,6 +110,9 @@ These activities are out of scope for this use case, but required for it to be s
 
 ### Discover Images
 <img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)
+
+#### Function: Select Detection Image Criteria
+- [Detection image criteria](#detection-image-criteria)
 
 #### Information Exchange: Discover Images
 ###### Request (Analyst)
@@ -160,6 +157,9 @@ It is possible that this operation will have to reach back to the Image Catalog 
 - Job Status
 - If Complete
   - [Image Descriptors](#image-descriptors) 
+
+#### Function: Displayed Discovered Images
+- [Image Descriptors](#image-descriptors)
 
 ### Ingest File
 <img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
