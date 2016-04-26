@@ -224,6 +224,19 @@ This includes determining where the output will be stored
 
 #### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
 
+#### Information Exchange: Get Detected Shorelines
+###### Request
+- File ID
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+#### Information Exchange: Store Detected Shorelines
+###### Request
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+###### Response N/A
+
 #### Function: Update Status
 
 #### Information Exchange: Get Status 
