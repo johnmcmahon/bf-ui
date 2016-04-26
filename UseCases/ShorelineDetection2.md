@@ -36,6 +36,8 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Name
 - Description
 - Thumbnail URI
+- Metadata
+  - Based on [Detection Image Criteria](#detection-image-criteria)
 - Beachfront Evaluation Score (if available)
 
 ### Detected Shorelines
@@ -137,6 +139,7 @@ The acknowledgement will provide either an error message or a job ID that can be
 
 #### Information Exchange: Evaluate Images
 ###### Request (JSON)
+- [Detection image criteria](#detection-image-criteria)
 - [Image Descriptors](#image-descriptors)
 
 ###### Response (JSON)
