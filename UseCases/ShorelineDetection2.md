@@ -86,17 +86,17 @@ These activities are out of scope for this use case, but required for it to be s
 - N/A
 
 ###### Response (JSON)
-[Detection Algorithms](#detection-algorithms)
+- [Detection Algorithms](#detection-algorithms)
 
 ###### Implementation Considerations
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
 #### Function: Display Detection Algorithms
-[Detection Algorithms](#detection-algorithms)
+- [Detection Algorithms](#detection-algorithms)
 
 #### Function: Select Detection Image Criteria
-[Detection image criteria](#detection-image-criteria)
+- [Detection image criteria](#detection-image-criteria)
 
 #### Information Exchange: Discover Images - [see below](#discover-images)
 
@@ -104,7 +104,7 @@ These activities are out of scope for this use case, but required for it to be s
 - [Image Descriptors](#image-descriptors)
 
 #### Function: Select Input Parameters
-[Detection Inputs](#detection-inputs)
+- [Detection Inputs](#detection-inputs)
 
 #### Information Exchange: Ingest Image - [see below](#ingest-file)
 
@@ -112,21 +112,7 @@ These activities are out of scope for this use case, but required for it to be s
 
 #### Function: Review Detected Shorelines - [see below](#review-detected-shorelines)
 
-#### Information Exchange: Get Detected Shorelines
-###### Request (Analyst)
-- File identifier
-
-###### Response (Piazza)
-- [Detected shorelines](#detected-shorelines)
-
-#### Information Exchange: File Request
-###### Request (Piazza)
-- File identifier
-
-###### Response (File Bucket)
-- [Detected shorelines](#detected-shorelines)
-
-#### Function: Display Detected Shorelines
+#### Display Detected Shorelines - [see below](#display-detected-shorelines)
 
 ### Discover Images
 <img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)
@@ -134,7 +120,7 @@ These activities are out of scope for this use case, but required for it to be s
 #### Information Exchange: Discover Images
 ###### Request (Analyst)
 - [Detection image criteria](#detection-image-criteria) (JSON)
-- Continuation Options (execute Evaluate Images)
+- Continuation Options (execute Evaluate Images if needed)
 
 ###### Response
 - Acknowledgement
@@ -183,7 +169,7 @@ It is possible that this operation will have to reach back to the Image Catalog 
 * File URL
 
 ###### Response
-Acknowledgement
+- Acknowledgement
 
 #### Function: Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
@@ -206,15 +192,12 @@ The acknowledgement will provide either an error message or a job ID that can be
 - If Complete
   - Location of Ingested File
 
-### Detection Execution
-<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+### Shoreline Detection Brokering
+<img src="http://www.websequencediagrams.com/files/render?link=1wgcwbcPpI4Xwc_DUWC5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBCcm9rZXJpbmcKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NcHpzdmMtYmYtYgBXBSBhcyAABAYAExNleGVjAEIFenN2YwB1DUZpbGUgQnVja2UAgQEFZmIKYXV0b251bWJlciAxCgoAgRAHLT4AfAY6AIFNBwCBWwpzCgCBFgYtLT4-AIE9BzogQWNrbm93bGVkZ2VtZW50ADwKABkJSW5zcGVjdFxuYQAcDwBHBz4AgVAGAFwUAIFqBgAYClZhbGlkYXRlIElucHV0ABYJZmI6IFF1ZXJ5IGZvcgCDBAdlZACBLQxmYi0tPgBgCVByZXNlbmNlIG9mABkVCmFsdCBpbnZhbGlkIGkAZgUgAIJrBy0tPgCCFwlFcnJvciBtZXNzYWdlCmVsc2UgYWxyZWFkeSBjb2xsAIEABQAkFUxvY2EAhCcFb2ZcbgCBGxQARwUAcQ5yZWYgb3ZlcgCDcwcsAIQPBiwgZmIKICAgIFNlZToAhHoVRXhlY3V0aW9uACIFAIUXBiBhY3RzIGFzIENsaWVudAogIGVuZCByZWYAdzduZAoAg0QJAIQ1CFVwAIMkBVN0YXR1cwoKbG9vcCBSZWN1cgCGFgUgAIV9CACEZApHZXQAJgggIGFsdCBPcGVyAIIhBkluY29tcGxldGUAgWcFAIRzEwAwCQCDAQUAMApDABkfAIJpIQCCFgUAgVwGCgo&s=magazine&h=VAFSQ0cxEa7H2Pb_)
 
 #### Information Exchange: Detect Shorelines (Analyst)
 ###### Request
-- Input Image(s) (URI)
-- Algorithm to use
-- Other algorithm-specific parameters
+- [Detection Inputs](#detection-inputs)
 
 ###### Response
 - Acknowledgement
@@ -224,35 +207,24 @@ The acknowledgement will provide either an error message or a job ID that can be
 
 #### Information Exchange: Detect Shorelines (Piazza)
 ###### Request (POST)
-[Detection Inputs](#detection-inputs)
+- [Detection Inputs](#detection-inputs)
 
 ###### Response
 Note: the connection stays open until the operation completes.
 - An appropriate error -OR-
 - Process outputs
-  - [Detected shorelines](#detected-shorelines)
-
+  - Location of detected shorelines
+  
 #### Function: Validate Input
+This includes determining where the output will be stored
 
-#### Information Exchange: Get Image
+#### Information Exchange: Query for Detected Shorelines
 ###### Request
-Image URL
+- File identifier
 ###### Response
-Image file
+- Presence of previous detection
 
-#### Information Exchange: [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-###### Request (EXECUTE)
-[Detection Inputs](#detection-inputs)
-
-###### Response
-The executable may output its response in the file provided
-
-#### Function: Algorithm Execution
-
-#### Function: Cleanup
-Cleanup activities like the following may be performed.
-- Delete input file
-- Delete output file
+#### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
 
 #### Function: Update Status
 
@@ -263,11 +235,54 @@ Cleanup activities like the following may be performed.
 ###### Response
 - Job Status
 - If Complete
-  - [Detected shorelines](#detected-shorelines)
+  - Location of detected shorelines
+
+### Detection Execution
+<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
+[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+
+#### Information Exchange: Detect Shorelines
+###### Request
+- [Detection Inputs](#detection-inputs)
+
+###### Response
+Note: the connection stays open until the operation completes.
+- An appropriate error -OR-
+- Process outputs
+  - Location of Detected Shorelines
+
+#### Information Exchange: Get Image
+###### Request
+Image URL
+###### Response
+Image file
+
+#### Information Exchange: Execute Algorithm
+###### Request (EXECUTE)
+- [Detection Inputs](#detection-inputs)
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+The executable may output its response in the file provided
+
+#### Function: Algorithm Execution
+
+#### Information Exchange: Store Detected Shorelines
+###### Request
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+###### Response N/A
+
+#### Function: Cleanup
+Cleanup activities like the following may be performed.
+- Delete input file
+- Delete output file
 
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUmV2aWV3IERldGVjdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0AAcNUGlhenphABoNRmVhdHVyZSBSZXBvc2l0b3J5IGFzIGZyAD8NYmYtYW5hbHl6ZQoKbm90ZSBvdmVyAFoILCBmciwAGAs6CiAgUHJlY29uZGl0aW9uczogQ2xvdWQgZGVwbG95bWVudCwgU2VydmljZSByZWdpc3RyYXRpb24sIGYAgQYHaG9zdGluZwplbmQgbm90ZQoKAIFHBy0-AIE9BjoAgXkSAIFWBi0tPj4AgXMHOiBBY2tub3dsZWRnZW1lbnQAGwgAOwlQcmVwYQCBdwV2aWV3ABYJZnI6IEdldCBCYXNlbGluZQCCHAhzCmZyAHcKAAwSAFcIAIIACwCDAAZ6ZSBMaW5lU3RyaW5ncwoAgkQKAB4OUGVyZm9ybSAAgmYFc2kAGw4AgXAIAINRBmlzIFJlc3VsdABsCmZyOiBTdG9yAIEkC2xvb3AgcmVjdXJyaW5nCiAAhAwIAII8CkdldCBTdGF0dXMKICBhbHQgT3BlAIMHBiBpbmNvbXBsZXRlCiAgIACENActAIJTCgAuCWVsc2UALQsAGB5Mb2MAWQZvZiBcbgCBPBEgIGVuZAplbmQK&s=magazine&h=bv3g9EzcODmTzsBD)
+
+#### Double-check - how are we decorating the output?
 
 #### Information Exchange: Review Detection
 ###### Request
@@ -319,3 +334,22 @@ Cleanup activities like the following may be performed.
 - Job Status
 - If complete
   - [Detection Analysis Results](#detection-analysis-results)
+
+### Display Detected Shorelines
+<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
+
+#### Information Exchange: Get Detected Shorelines
+###### Request (Analyst)
+- File identifier
+
+###### Response (Piazza)
+- [Detected shorelines](#detected-shorelines)
+
+#### Information Exchange: File Request
+###### Request (Piazza)
+- File identifier
+
+###### Response (File Bucket)
+- [Detected shorelines](#detected-shorelines)
+
+#### Function: Display Detected Shorelines

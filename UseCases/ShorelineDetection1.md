@@ -36,25 +36,11 @@ These activities are out of scope for this use case, but required for it to be s
 #### Function: Select Input Parameters
 [Detection Inputs](#detection-inputs)
 
-#### Information Exchange: Ingest File - [see below](#ingest-file)
+#### Ingest File - [see below](#ingest-file)
 
-#### Information Exchange: Detect Shorelines - [see below](#detection-execution)
+#### Shoreline Detection Passthrough - [see below](#shoreline-detection-passthrough)
 
-#### Information Exchange: Get Detected Shorelines
-###### Request (Analyst)
-- File identifier
-
-###### Response (Piazza)
-- [Detected shorelines](#detected-shorelines)
-
-#### Information Exchange: File Request
-###### Request (Piazza)
-- File identifier
-
-###### Response (File Bucket)
-- [Detected shorelines](#detected-shorelines)
-
-#### Function: Display Detected Shorelines
+#### Display Detected Shorelines - [see below](#display-detected-shorelines)
 
 ### Ingest File
 <img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
@@ -88,53 +74,20 @@ The acknowledgement will provide either an error message or a job ID that can be
 - If Complete
   - Location of Ingested File
 
-### Detection Execution
-<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+### Shoreline Detection Passthrough
+<img src="http://www.websequencediagrams.com/files/render?link=Yc5E25woSGfrm-8AzFgE"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBQYXNzdGhyb3VnaAoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDUZpbGUgQnVja2UAOwVmYgoKAD0HLT5yZWYgb3ZlcgAxBywgZmI6AIEXBwCBJQpzCiAgU2UAgSoMRXhlY3V0aW9uCiAAcwljdHMgYXMgQ2xpZW50CmVuZCByZWYKCgCBCwYtPgCBEwY6IFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgVcIACcKR2V0ACYIICBhbHQgT3BlcmEAgjgFSW5jb21wbGV0ZQogICAAgXUHLS0-PgCCHQc6AC8KZWxzZQAvC0MAGR9Mb2MAXQZvZlxuAIMoBmVkAIIEDmVuZAplbmQK&s=magazine&h=H7kEmTJ7i7SKowA7)
 
-#### Information Exchange: Detect Shorelines (Analyst)
-###### Request
-- Input Image(s) (URI)
-- Algorithm to use
-- Other algorithm-specific parameters
+#### Information Exchange: Get Detected Shorelines
+###### Request (Analyst)
+- [Detection Inputs](#detection-inputs)
 
-###### Response
+###### Response 
 - Acknowledgement
 
 #### Function: Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
 
-#### Information Exchange: Detect Shorelines (Piazza)
-###### Request (POST)
-[Detection Inputs](#detection-inputs)
-
-###### Response
-Note: the connection stays open until the operation completes.
-- An appropriate error -OR-
-- Process outputs
-  - [Detected shorelines](#detected-shorelines)
-
-#### Function: Validate Input
-
-#### Information Exchange: Get Image
-###### Request
-Image URL
-###### Response
-Image file
-
-#### Information Exchange: [Execute Shoreline Detection](../Analyst/ExecuteShorelineDetection.md)
-###### Request (EXECUTE)
-[Detection Inputs](#detection-inputs)
-
-###### Response
-The executable may output its response in the file provided
-
-#### Function: Algorithm Execution
-
-#### Function: Cleanup
-Cleanup activities like the following may be performed.
-- Delete input file
-- Delete output file
+#### Detection Execution: [see below](#detection-execution)
 
 #### Function: Update Status
 
@@ -145,6 +98,65 @@ Cleanup activities like the following may be performed.
 ###### Response
 - Job Status
 - If Complete
-  - [Detected shorelines](#detected-shorelines)
+  - Location of detected shorelines
 
+### Detection Execution
+<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
+[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+
+#### Information Exchange: Detect Shorelines
+###### Request
+- [Detection Inputs](#detection-inputs)
+
+###### Response
+Note: the connection stays open until the operation completes.
+- An appropriate error -OR-
+- Process outputs
+  - Location of Detected Shorelines
+
+#### Information Exchange: Get Image
+###### Request
+Image URL
+###### Response
+Image file
+
+#### Information Exchange: Execute Algorithm
+###### Request (EXECUTE)
+- [Detection Inputs](#detection-inputs)
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+The executable may output its response in the file provided
+
+#### Function: Algorithm Execution
+
+#### Information Exchange: Store Detected Shorelines
+###### Request
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+###### Response N/A
+
+#### Function: Cleanup
+Cleanup activities like the following may be performed.
+- Delete input file
+- Delete output file
+
+### Display Detected Shorelines
+<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
+
+#### Information Exchange: Get Detected Shorelines
+###### Request (Analyst)
+- File identifier
+
+###### Response (Piazza)
+- [Detected shorelines](#detected-shorelines)
+
+#### Information Exchange: File Request
+###### Request (Piazza)
+- File identifier
+
+###### Response (File Bucket)
+- [Detected shorelines](#detected-shorelines)
+
+#### Function: Display Detected Shorelines
 
