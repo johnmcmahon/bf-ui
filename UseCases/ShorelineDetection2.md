@@ -25,7 +25,6 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 
 ### Detection Inputs
 - Image(s) (Data ID)
-- Area of Interest (GeoJSON Geometry)
 - Algorithm ID
 - Algorithm executable command
    - Input file(s)
