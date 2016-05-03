@@ -32,7 +32,7 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 
 ### Image Descriptors
 - ID
-- URI
+- URI (path)
 - Name
 - Description
 - Thumbnail URI
