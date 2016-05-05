@@ -17,11 +17,11 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 ### Detection Image Criteria
 - Date of Collection (ISO-8601)
 - Area of Interest (GeoJSON Geometry)
-- Maximum percentage of cloud cover
+- Percentage of cloud cover (maximum)
 - File format
 - Bit depth
 - Number of bands
-- Maximum file size
+- File size (maximum)
 
 ### Detection Inputs
 - Algorithm ID
@@ -33,8 +33,6 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 ### Image Descriptors
 - ID
 - URI (path)
-- Name
-- Description
 - Thumbnail URI
 - Metadata
   - Based on [Detection Image Criteria](#detection-image-criteria)
