@@ -16,6 +16,7 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 
 ### Detection Image Criteria
 - Date of Collection (ISO-8601)
+- Bounding Box (GeoJSON BBox)
 - Area of Interest (GeoJSON Geometry)
 - Percentage of cloud cover (maximum)
 - File format
