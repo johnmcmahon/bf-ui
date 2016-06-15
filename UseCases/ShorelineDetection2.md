@@ -221,6 +221,7 @@ This includes determining where the output will be stored
 #### Information Exchange: Query for Detected Shorelines
 ###### Request
 - File identifier
+
 ###### Response
 - Presence of previous detection
 
