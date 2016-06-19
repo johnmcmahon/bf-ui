@@ -21,6 +21,7 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Percentage of cloud cover (maximum)
 - File format
 - Bit depth
+- Resolution (ground sample distance)
 - Bands (string array?)
 - File size (maximum)
 
