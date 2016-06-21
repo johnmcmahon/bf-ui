@@ -229,6 +229,8 @@ This includes determining where the output will be stored
 
 #### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
 
+#### Natural Color Image Creation - [see below](#natural-color-image-creation)
+
 #### Information Exchange: Get Detected Shorelines
 ###### Request
 - File ID
@@ -236,7 +238,15 @@ This includes determining where the output will be stored
 ###### Response
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
 
-#### Information Exchange: Store Detected Shorelines
+#### Information Exchange: Update File Bucket Metadata
+###### Request
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+###### Response N/A
+
+#### Function: Metadata Injection
+
+#### Information Exchange: Store Updated Shorelines
 ###### Request
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
 
@@ -293,6 +303,64 @@ The executable may output its response in the file provided
 Cleanup activities like the following may be performed.
 - Delete input file
 - Delete output file
+
+### Natural Color Image Creation
+<img src="http://www.websequencediagrams.com/files/render?link=_VcVLUP4dl8MGi2T1zk6"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTmF0dXJhbCBDb2xvciBJbWFnZSBDcmVhdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudAAjB0FyY2hpdmUgYXMgaWEAEw1iZi1oYW5kbAAXBWNsaWVudAAzDVBpYXp6ACUOAHcGVG9vbABLBXQKCmFsdCBpAIEOBWFscmVhZHkgZXhpc3RzCiAATActPmlhOiBHZXQAgTQMCiAgaWEtPgBvBjoACw8AMAgAegY6IEluZ2VzAC8QAIEXBi0tPgAxFCBPYmplY3QgSUQKZWxzZQCBGgdtdXN0IGJlIGNyZWF0ZWQAgQ8TAIJWBkJhbmRzAIETDwCCcQUAgUkMAIEODwAsDgCBCxJCYW5kAIEMCgCCEwstPj5pdDogRXhlY3V0ZQCDThAgIGkAgX4LAIEREgCBfwcAPgUAgS4PdAAQBgCEJAUAUQcAQA8AgjkfADkFAII_FQCBEQUAglgibmQKAIM7EFNlcnYAgV0IaW4gR2VvAA0FcgoAgUEIABYTABQIAINgC01hcABGBWljZSBFbmRwb2ludAoK&s=magazine&h=kfp6SALOkj-8Uw--)
+
+#### Information Exchange: Get Color Image
+###### Request
+- Image URI
+
+###### Response
+- Color Image
+
+#### Information Exchange: Ingest Color Image
+###### Request (bf-handle or pzsvc-exec)
+- Color Image
+
+###### Response
+- Color Image Object ID
+
+#### Information Exchange: Get Image Bands
+###### Request (bf-handle)
+- Image URIs
+
+###### Response (Image Archive)
+- Images
+
+#### Information Exchange: Ingest Image Bands
+###### Request
+- Image Bands
+
+###### Response
+- Images Band Object IDs
+
+#### Information Exchange: Execute Image Creation
+###### Request
+- Image Band Object IDs
+
+###### Response
+- Color Image Object ID
+
+#### Information Exchange: Get Image Bands
+###### Request (pzsvc-exec)
+- Image Band Object IDs
+
+###### Response (Piazza)
+- Images
+
+#### Function: Create Color Image
+- Band merging
+- Color correction
+
+#### Information Exchange: Serve Image in Map Server
+###### Request
+- Color Image Object ID
+
+###### Response
+- Map Service Endpoint
+
+#### Function: Serve Image
 
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
