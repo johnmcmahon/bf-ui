@@ -17,12 +17,12 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 ### Detection Image Criteria
 - Date of Collection (ISO-8601)
 - Bounding Box (GeoJSON BBox)
-- Area of Interest (GeoJSON Geometry)
+- Area of Interest (GeoJSON Polygon Geometry)
 - Percentage of cloud cover (maximum)
 - File format
 - Bit depth
 - Resolution (ground sample distance)
-- Bands (string array?)
+- Bands (string array)
 - File size (maximum)
 
 ### Detection Inputs
@@ -35,7 +35,8 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 ### Image Descriptors
 - ID
 - URI (path)
-- Thumbnail URI
+- Small Thumbnail URI
+- Large Thumbnail URI
 - Metadata
   - Based on [Detection Image Criteria](#detection-image-criteria)
 - Beachfront Evaluation Score (if available)
