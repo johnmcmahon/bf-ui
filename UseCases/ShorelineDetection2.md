@@ -55,6 +55,12 @@ GeoJSON Feature Collection
 ### Detection Analysis Results
 TBD
 
+### File Bucket Metadata
+- algorithm execution details
+- date of collection
+- sensor name
+- image ID
+
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=D9axg9OAxnfJh6duGlpZ"/>
@@ -65,22 +71,24 @@ These activities are out of scope for this use case, but required for it to be s
 
 ##### Cloud Deployment
 - [ ] service reporting the available detection algorithms
-- [ ] pzsvc-search
+- [x] pzsvc-image-catalog
 - [ ] pzsvc-bf-eval
-- [ ] pzsvc-exec
-- [ ] detection algorithms
+- [x] bf-handle
+- [x] pzsvc-exec
+- [x] detection algorithms
 - [ ] pzsvc-bf-review
 
 ##### Service Registration
 - [ ] service reporting the available detection algorithms
-- [ ] pzsvc-search
+- [ ] pzsvc-image-catalog
 - [ ] pzsvc-bf-eval
-- [ ] pzsvc-exec
+- [x] bf-handle
+- [x] pzsvc-exec
 - [ ] pzsvc-bf-review
 
 ##### Metadata Harvesting
-- [ ] One or more image archives must be established. They may be managed inside or outside Piazza. 
-- [ ] The image catalog must be populated with metadata about available images from each image archive.
+- [x] One or more image archives must be established. They may be managed inside or outside Piazza. 
+- [x] The image catalog must be populated with metadata about available images from each image archive.
 
 #### Information Exchange: Get Detection Algorithms
 ###### Request
@@ -126,7 +134,7 @@ These activities are out of scope for this use case, but required for it to be s
 #### Function: Inspect Acknowledgement
 The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
 
-#### Information Exchange: Search for Images
+#### Information Exchange: Image Search
 ###### Request (Analyst) (JSON)
 - [Detection image criteria](#detection-image-criteria)
 
@@ -233,14 +241,16 @@ This includes determining where the output will be stored
 
 #### Information Exchange: Get Detected Shorelines
 ###### Request
-- File ID
+- File Request (File ID)
+- File Metadata Request (File ID)
 
 ###### Response
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
 
 #### Information Exchange: Update File Bucket Metadata
 ###### Request
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
 
 ###### Response N/A
 
@@ -249,6 +259,7 @@ This includes determining where the output will be stored
 #### Information Exchange: Store Updated Shorelines
 ###### Request
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
 
 ###### Response N/A
 
@@ -277,11 +288,11 @@ Note: the connection stays open until the operation completes.
 - Process outputs
   - Location of Detected Shorelines
 
-#### Information Exchange: Get Image
+#### Information Exchange: Get Images
 ###### Request
-Image URL
+Image URL IDs
 ###### Response
-Image file
+Image files (TIFF)
 
 #### Information Exchange: Execute Algorithm
 ###### Request (EXECUTE)
@@ -312,11 +323,11 @@ Cleanup activities like the following may be performed.
 - Image URI
 
 ###### Response
-- Color Image
+- Color Image (TIFF)
 
 #### Information Exchange: Ingest Color Image
 ###### Request (bf-handle or pzsvc-exec)
-- Color Image
+- Color Image (TIFF)
 
 ###### Response
 - Color Image Object ID
@@ -326,11 +337,11 @@ Cleanup activities like the following may be performed.
 - Image URIs
 
 ###### Response (Image Archive)
-- Images
+- Images (TIFF)
 
 #### Information Exchange: Ingest Image Bands
 ###### Request
-- Image Bands
+- Image Bands (TIFF)
 
 ###### Response
 - Images Band Object IDs
@@ -347,7 +358,7 @@ Cleanup activities like the following may be performed.
 - Image Band Object IDs
 
 ###### Response (Piazza)
-- Images
+- Images (TIFF)
 
 #### Function: Create Color Image
 - Band merging
@@ -436,4 +447,13 @@ Cleanup activities like the following may be performed.
 ###### Response (File Bucket)
 - [Detected shorelines](#detected-shorelines)
 
-#### Function: Display Detected Shorelines
+#### Information Exchange: Map Request
+###### Request (Analyst)
+- WMS or WMTS request for base image
+
+###### Response (Map Server)
+- JPG images
+
+#### Function: Display Map
+- Detected Shorelines
+- Base Image (as JPG)
