@@ -34,6 +34,12 @@ GeoJSON Feature Collection
   - RESOLUTION (float)
   - CV_ALGORITHM_NAME (string)
 
+### File Bucket Metadata
+- algorithm execution details
+- date of collection
+- sensor name
+- image ID
+
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=-LhbydE_w6o3Iq1-ZgjU"/>
@@ -113,6 +119,14 @@ The shoreline features need to be conflated into a single set of feature objects
 
 ###### Response
 - Acknowledgement
+
+#### Authenticate
+###### Request: GET pz-gateway.../
+- Credentials
+
+###### Response
+- Acknowledgement -or-
+- Error message
 
 #### Information Exchange: Get Event Type ID
 ###### Request: GET pz-gateway.../eventType
