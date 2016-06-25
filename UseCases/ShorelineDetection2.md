@@ -323,7 +323,8 @@ Cleanup activities like the following may be performed.
 - Image URI
 
 ###### Response
-- Color Image (TIFF)
+- Color Image (TIFF) -or-
+- Not Found message
 
 #### Information Exchange: Ingest Color Image
 ###### Request (bf-handle or pzsvc-exec)
