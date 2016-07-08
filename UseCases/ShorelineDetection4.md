@@ -164,6 +164,22 @@ it must be registered now to support subsequent operations.
 - Image Archive-specific
    - [image descriptors](#image-descriptors)
 
+#### Function: Process Incoming Images
+Add the image to the main index.
+
+#### Information Exchange: Post New Event
+###### Request
+- Image ID
+- Event Name
+
+###### Response: N/A
+
+#### Function: Test Image
+If sub-indexes exist, each image needs to tested against the filter criteria (features)
+
+#### Function: Add to Sub-Index
+Add the image to the designated sub-index.
+
 ### Process Incoming Image
 <img src="http://www.websequencediagrams.com/files/render?link=ySQrO8WN6BUfEouHN4xr"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUHJvY2VzcyBJbmNvbWluZyBJbWFnZQoKcGFydGljaXBhbnQgUGlhenphAAYNcHpzdmMtYmYtYnJva2VyIGFzAA0GACsNAEYFIEFyY2hpdmUgYXMgaQA3DkZlYXR1cmUgUmVwb3NpdG9yeSBhcyBmcgoKYXV0b251bWJlciAxCgoAegYgLT4AcQY6AIEdGHJlZiBvdmVyAIEEByAgU2VlOiBFdmFsdWF0ZQCBVAZzCiAAgSsSY3RzIGFzIENsaWVudAplbmQgcmVmCgpvcACBPAhjb25mb3JtcwogIABXDiwgaWEKICAgIERldGVjdCBTaG9yZWxpbgBjBQB6BwAVBmlvbiBFeGVjdXRpb24KICAAXQkAgQgIPmZyAIFVBXBvc2VkADsOZnIAGAZTdG9yZQCCLwgAEgctPj4Agg8HABAIJyBMb2NhAGAHAIMjBi0-PgCDPwYATRUgCiAAg10HLQAdCmVyc2lzAIFEDWVuZAo&s=magazine&h=YtrgzBeRuU0H9Khl)
 

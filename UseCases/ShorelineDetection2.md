@@ -150,6 +150,13 @@ it must be registered now to support subsequent operations.
 
 #### Image Metadata Harvesting Loop: [see below](#image-metadata-harvesting-loop)
 
+#### Information Exchange: Establish Sub-Indexer
+###### Request
+- WFS endpoint
+
+###### Response
+- Sub-index ID - this can be used in subsequent requests to filter
+
 ### Image Metadata Harvesting Loop
 <img src="http://www.websequencediagrams.com/files/render?link=SbbUAEoyFBpmMLmwXf7J"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW1hZ2UgTWV0YWRhdGEgSGFydmVzdGluZyBMb29wCgpwYXJ0aWNpcGFudAAlB0NhdGFsb2cgYXMgaWMADRNBcmNoaXZlABsFYQAzDVBpYXp6YSBhcyBwAAUFCgphdXRvbnVtYmVyIDEKCmxvb3AgV2hpbGUgbmV3IGltYWdlcyByZW1haW4KICBpYy0-aWE6IFF1ZXJ5IGZvcgAcBiBtAIE2BwogIGlhLT5pYzoAgU8HAA0MYwATBlByb2Nlc3MgaW5jb21pbmcAXgcKICBvcHQgaWYgbmVlZGVkCiAgAGoGAIEjBjogUG9zdACBEAVldmVudAogIGVuZAplbmQKCg&s=magazine&h=KPnRD8l2gfwnA_Q_)
 
@@ -160,6 +167,15 @@ it must be registered now to support subsequent operations.
 ###### Response
 - Image Archive-specific
    - [image descriptors](#image-descriptors)
+
+#### Function: Process Incoming Images
+Add the image to the main index.
+
+#### Function: Test Image
+If sub-indexes exist, each image needs to tested against the filter criteria (features)
+
+#### Function: Add to Sub-Index
+Add the image to the designated sub-index.
 
 ### Discover Images
 <img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)

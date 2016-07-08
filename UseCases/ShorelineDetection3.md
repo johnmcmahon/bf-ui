@@ -154,6 +154,15 @@ it must be registered now to support subsequent operations.
 - Image Archive-specific
    - [image descriptors](#image-descriptors)
 
+#### Function: Process Incoming Images
+Add the image to the main index.
+
+#### Function: Test Image
+If sub-indexes exist, each image needs to tested against the filter criteria (features)
+
+#### Function: Add to Sub-Index
+Add the image to the designated sub-index.
+
 ### Shoreline Detection Brokering
 <img src="http://www.websequencediagrams.com/files/render?link=1wgcwbcPpI4Xwc_DUWC5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBCcm9rZXJpbmcKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NcHpzdmMtYmYtYgBXBSBhcyAABAYAExNleGVjAEIFenN2YwB1DUZpbGUgQnVja2UAgQEFZmIKYXV0b251bWJlciAxCgoAgRAHLT4AfAY6AIFNBwCBWwpzCgCBFgYtLT4-AIE9BzogQWNrbm93bGVkZ2VtZW50ADwKABkJSW5zcGVjdFxuYQAcDwBHBz4AgVAGAFwUAIFqBgAYClZhbGlkYXRlIElucHV0ABYJZmI6IFF1ZXJ5IGZvcgCDBAdlZACBLQxmYi0tPgBgCVByZXNlbmNlIG9mABkVCmFsdCBpbnZhbGlkIGkAZgUgAIJrBy0tPgCCFwlFcnJvciBtZXNzYWdlCmVsc2UgYWxyZWFkeSBjb2xsAIEABQAkFUxvY2EAhCcFb2ZcbgCBGxQARwUAcQ5yZWYgb3ZlcgCDcwcsAIQPBiwgZmIKICAgIFNlZToAhHoVRXhlY3V0aW9uACIFAIUXBiBhY3RzIGFzIENsaWVudAogIGVuZCByZWYAdzduZAoAg0QJAIQ1CFVwAIMkBVN0YXR1cwoKbG9vcCBSZWN1cgCGFgUgAIV9CACEZApHZXQAJgggIGFsdCBPcGVyAIIhBkluY29tcGxldGUAgWcFAIRzEwAwCQCDAQUAMApDABkfAIJpIQCCFgUAgVwGCgo&s=magazine&h=VAFSQ0cxEa7H2Pb_)
 
