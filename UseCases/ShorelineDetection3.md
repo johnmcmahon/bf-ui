@@ -77,24 +77,15 @@ These activities are out of scope for this use case, but required for it to be s
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
-#### Information Exchange: Get Baseline Shorelines
+#### Information Exchange: Get Image Metadata
 ###### Request
-- WFS Request
+- [Detection Image Criteria](#detection-image-criteria)
 
 ###### Response
-- Shoreline Features (WFS - GeoJSON)
+- [Image Descriptors](#image-descriptors) (JSON)
 
-#### Function: Crawl along baseline shorelines
-
-#### Information Exchange: Get Baseline Shorelines
-###### Request
-- Bounding box
-- Maximum date of collection
-
-###### Response
-- Image Metadata (JSON)
-
-#### Function: Evaluate Images
+#### Function: Review Selected Images
+The user selects a subset of the retrieved images for further processing.
 
 #### Shoreline Detection Brokering: [see below](#shoreline-detection-brokering)
 
@@ -142,6 +133,28 @@ it must be registered now to support subsequent operations.
 - Schema
 
 #### Image Metadata Harvesting Loop: [see below](#image-metadata-harvesting-loop)
+
+### Generate SubIndex
+<img src="http://www.websequencediagrams.com/files/render?link=cPAzvrinjEYq4C4fmcMB"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgR2VuZXJhdGUgU3ViSW5kZXgKCnBhcnRpY2lwYW50IENsaWVudCBhcyBBbmFseXN0ABENSW1hZ2UgQ2F0YWxvZyBhcyBpYwAxDVdlYiBGZWF0dXJlIFNlcnZlciBhcyB3ZnMKCmF1dG9udW1iZXIgMQoKAFYHLT5pYzoAgQATaWMtLT4-AHsHOgCBIgkgSUQKCmljLT53ZnM6IEdldCBCYXNlbGluZSBTaG9yAAUFcwp3ZnMAUgYACRQAFAoAgSEHcwBMBWljOiBQb3B1bACCDA4&s=magazine&h=2fBFtYrNCqg__rzW)
+
+#### Information Exchange: Generate SubIndex
+###### Request
+- WFS URL
+
+###### Response
+- SubIndex ID
+
+#### Information Exchange: Get Baseline Shorelines
+###### Request
+- WFS Request
+
+###### Response
+- Shoreline Features (WFS - GeoJSON)
+
+#### Function: Populate SubIndex
+- Produce set of tiles
+- Split WFS geometries into tiles
+- Loop through known images, putting just ones that pass the filter into the SubIndex
 
 ### Image Metadata Harvesting Loop
 <img src="http://www.websequencediagrams.com/files/render?link=SbbUAEoyFBpmMLmwXf7J"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW1hZ2UgTWV0YWRhdGEgSGFydmVzdGluZyBMb29wCgpwYXJ0aWNpcGFudAAlB0NhdGFsb2cgYXMgaWMADRNBcmNoaXZlABsFYQAzDVBpYXp6YSBhcyBwAAUFCgphdXRvbnVtYmVyIDEKCmxvb3AgV2hpbGUgbmV3IGltYWdlcyByZW1haW4KICBpYy0-aWE6IFF1ZXJ5IGZvcgAcBiBtAIE2BwogIGlhLT5pYzoAgU8HAA0MYwATBlByb2Nlc3MgaW5jb21pbmcAXgcKICBvcHQgaWYgbmVlZGVkCiAgAGoGAIEjBjogUG9zdACBEAVldmVudAogIGVuZAplbmQKCg&s=magazine&h=KPnRD8l2gfwnA_Q_)
