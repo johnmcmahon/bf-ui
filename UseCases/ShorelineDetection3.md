@@ -13,6 +13,7 @@ This is an extension of [Use Case 1](ShorelineDetection1.md) that introduces dif
 - Resolution (ground sample distance)
 - Bands (string array)
 - File size (maximum)
+- SubIndex (cache)
 
 ### Image Descriptors
 - ID
