@@ -22,6 +22,8 @@ from an external image archive.
   - false: stop when a scene already exists in catalog
 - cap
   - true: caps catalog size to 1000 scenes (for testing only)
+- optionsKey
+  - not-empty: suffix for key containing harvest options (overrides everything above except for Image Archive and `event`)
 
 ### Event Type
 - ID (read-only)
@@ -66,6 +68,10 @@ from an external image archive.
 ###### Response
 - Acknowledgement -OR-
 - Error Message
+
+#### Retrieve Harvest Parameters
+If a key is provided, retrieve the harvest parameters from storage.
+This is generally used to support recurring harvests.
 
 #### Authenticate
 ###### Request: GET piazza.../
@@ -141,29 +147,66 @@ If sub-indexes exist, each scene needs to tested against the filter criteria (fe
 Add the scene to the designated sub-index.
 
 ### Establish Recurring Harvest
-TBD
+<img src="http://www.websequencediagrams.com/files/render?link=hoMAxWxVCEraLXuDncbf"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRXN0YWJsaXNoIFJlY3VycmluZyBIYXJ2ZXN0CgpwYXJ0aWNpcGFudCBJbWFnZSBDYXRhbG9nIGFzIGljABMNUGlhenphIGFzIHAABQUKCmF1dG9udW1iZXIgMQoKaWMtPgAUBjogUG9zdCBTZXJ2aWNlCgApBi0-aWM6IEFja25vd2xlZGdlbWVudAAoDlVwZGF0ZQAOKmljOiBQZXJzaXN0IHIAgVQJaACBVwYgcGFyYW1ldGVycwoKcmVmIG92ZXIgaWMsAIE3ByAgR2V0AIICEiBFdmVudCBUeXBlIElECiAgc2VlIFJlZ2lzdGVyABILCmVuZCByZWYAgWUTQ3JvbgBBBgCBUSoAgiwFVHJpZ2dlcgCCEx4&s=magazine&h=7iCUDMDdjt_3LKPi)
 
-# Morgue
-#### Information Exchange: Get Event Type ID
-###### Request: GET pz-gateway.../eventType
-###### Response
-- Name
-- ID
-
-#### Information Exchange: Register Event Type
-If the event type has not been registered yet, 
-it must be registered now to support subsequent operations.
-###### Request: PUT pz-gateway.../eventType
-- Name
-- Schema
-
-#### Information Exchange: Establish Sub-Indexer
-###### Request
-- WFS endpoint
+#### Information Exchange: Post Service
+###### Request: POST `piazza.../service`
+- [Credentials](#credentials)
+- Harvest Request URL
+  - [Harvest Options](#harvest-options)
 
 ###### Response
-- Sub-index ID - this can be used in subsequent requests to filter
+- Wrapper
+  - Service ID
 
+#### Information Exchange: Update Service
+Here we update the service URL with the Service ID 
+which we also use when persisting the recurring harvest parameters.
+This allows us to execute the recurring harvest on behalf of the person
+who originally initiated the harvest operation.
+###### Request: PUT `piazza.../service`
+- [Credentials](#credentials)
+- Harvest Request URL
+  - [Harvest Options](#harvest-options)
+  - Service ID
 
+###### Response
+- Wrapper
 
+#### Function: Persist Harvest Options
+By persisting the harvest options, 
+we have the information we need to re-run the harvest later. 
+We use the service ID as a suffix to the key.
+This gives us a unique identifier.
 
+#### Function: Get Recurring Event Type ID: [see above](#register-event-type)
+This event has no payload.
+We just need something that fires on a timer.
+
+#### Information Exchange: Post Cron Event
+###### Request: POST `piazza.../event`
+- [Credentials](#credentials)
+- Event Type ID
+- Cron duration
+- empty data
+
+###### Response
+- Data
+  - Event ID
+
+#### POST Trigger
+###### Request: POST `piazza.../trigger`
+- [Credentials](#credentials)
+- Name "Beachfront Recurring Harvest"
+- Event Type ID (from above)
+- enabled `true`
+- Job Type `execute-service`
+- Job Service ID (from above)
+- Job Inputs
+  - none
+- Job Output
+  - Mime Type `text-plain`
+  - Type `text`
+
+###### Response
+- Wrapper
