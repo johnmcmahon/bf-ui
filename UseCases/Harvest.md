@@ -194,7 +194,7 @@ We just need something that fires on a timer.
 - Data
   - Event ID
 
-#### POST Trigger
+#### Information Exchange: POST Trigger
 ###### Request: POST `piazza.../trigger`
 - [Credentials](#credentials)
 - Name "Beachfront Recurring Harvest"
@@ -210,3 +210,8 @@ We just need something that fires on a timer.
 
 ###### Response
 - Wrapper
+
+#### Information Exchange: Harvest Scene Metadata: [see above](#concept-of-operations)
+Piazza kicks off requested Harvest operations, 
+using the provided URL.
+
