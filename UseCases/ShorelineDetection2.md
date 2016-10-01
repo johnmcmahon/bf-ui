@@ -1,4 +1,4 @@
-# Shoreline Detection MVP2
+# Shoreline Detection Use Case 2
 This is an extension of [Use Case 1](ShorelineDetection1.md).
 - This workflow introduces an image catalog that contains metadata about available images
 - The analyst provides search criteria and a service returns descriptions of images that match
@@ -14,10 +14,16 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Input constraints
 - Parameters
 
-### Detection Image Criteria
+### SubIndexes
+- name
+- key (read-only)
+- WFS URL
+- feature type name
+
+### Scene Criteria
 - Date of Collection (ISO-8601)
+- Maximum Date of Collection (ISO-8601)
 - Bounding Box (GeoJSON BBox)
-- Area of Interest (GeoJSON Polygon Geometry)
 - Percentage of cloud cover (maximum)
 - File format
 - Bit depth
@@ -25,20 +31,20 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Bands (string array)
 - File size (maximum)
 
-### Detection Inputs
+### Detection Parameters
 - Algorithm ID
 - Algorithm executable command
    - IDs of input file(s) 
    - Output file(s)
    - Additional parameters
 
-### Image Descriptors
+### Scene Descriptor
 - ID
 - URI (path)
 - Small Thumbnail URI
 - Large Thumbnail URI
 - Metadata
-  - Based on [Detection Image Criteria](#detection-image-criteria)
+  - Based on [Scene Criteria](#scene-criteria)
 - Beachfront Evaluation Score (if available)
 
 ### Detected Shorelines
@@ -72,19 +78,13 @@ These activities are out of scope for this use case, but required for it to be s
 ##### Cloud Deployment
 - [ ] service reporting the available detection algorithms
 - [x] pzsvc-image-catalog
-- [ ] pzsvc-bf-eval
 - [x] bf-handle
 - [x] pzsvc-exec
 - [x] detection algorithms
-- [ ] pzsvc-bf-review
 
 ##### Service Registration
-- [ ] service reporting the available detection algorithms
-- [ ] pzsvc-image-catalog
-- [ ] pzsvc-bf-eval
 - [x] bf-handle
 - [x] pzsvc-exec
-- [ ] pzsvc-bf-review
 
 ##### Metadata Harvesting
 - [x] One or more image archives must be established. They may be managed inside or outside Piazza. 
@@ -101,120 +101,129 @@ These activities are out of scope for this use case, but required for it to be s
 1. If the available algorithms are expected to be stable, this operation is unnecessary.
 2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
 
-#### Function: Display Detection Algorithms
-- [Detection Algorithms](#detection-algorithms)
+#### Information Exchange: Get SubIndexes
+###### Request: GET `pzsvc-image-catalog.../subIndex`
+###### Response
+- [SubIndexes](#subindex)
 
-#### Information Exchange: Discover Images - [see below](#discover-images)
+#### Function: Display Discovery Criteria
+- [Detection Algorithms](#detection-algorithms)
+- [SubIndexes](#subindex)
+
+#### Function: Discover Scenes - [see below](#discover-scenes)
+
+#### Function: Displayed Discovered Scenes
+- [Scene Descriptors](#scene-descriptor)
 
 #### Function: Select Input Parameters
-- [Detection Inputs](#detection-inputs)
+- [Detection Parameters](#detection-parameters)
 
-#### Information Exchange: Ingest Image - [see below](#ingest-file)
-
-#### Information Exchange: Detect Shorelines - [see below](#detect-shorelines)
+#### Function: Detect Shorelines - [see below](#detect-shorelines)
 
 #### Function: Review Detected Shorelines - [see below](#review-detected-shorelines)
 
-#### Display Detected Shorelines - [see below](#display-detected-shorelines)
+#### Function: Display Detected Shorelines - [see below](#display-detected-shorelines)
 
-### Harvest Image Metadata
-<img src="http://www.websequencediagrams.com/files/render?link=H4oWXErbvC8ZjH798BDi"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSGFydmVzdCBJbWFnZSBNZXRhZGF0YQoKcGFydGljaXBhbnQgYmYtdWkABQ0AKAZDYXRhbG9nIGFzIGljACUNUGlhenphIGFzIHAABQUAKhNBcmNoaXZlADgFYQphdXRvbnVtYmVyIDEKCgBsBS0-aWM6AIEXCWV4aXN0aW5nIG0AgRsIaWMtPgCBFQU6IEFja25vd2xlZGdlbWVudAAWBQBzBjogR2V0IGV2ZW50IHR5cGUgaWQKAIENBi0tPgBcBUUAEgpJRApvcHQgaWYgbmVlZGVkCiAgAD4MUmVnaXN0ZXIARAsKZW5kCnJlZiBvdmVyIGljLCBpYQogIFNlZToAgkMPAIJhCGluZyBMb29wCmVuZCByZWYAYREAgXELRXN0YWJsaXNoIHJlY3VycmluZyBoAIMqBgogIABlEgBTJiAgAHMIZW5kCgo&s=magazine&h=7kBiS47sCgtqJvlC)
-
-#### Information Exchange: Harvest Existing Metadata
-###### Request
-- API key for Image Archive (if needed)
-
-###### Response
-- Acknowledgement
-
-#### Authenticate
-###### Request: GET pz-gateway.../
-- Credentials
-
-###### Response
-- Acknowledgement -or-
-- Error message
-
-#### Information Exchange: Get Event Type ID
-###### Request: GET pz-gateway.../eventType
-###### Response
-- Name
-- ID
-
-#### Information Exchange: Register Event Type
-If the event type has not been registered yet, 
-it must be registered now to support subsequent operations.
-###### Request: PUT pz-gateway.../eventType
-- Name
-- Schema
-
-#### Image Metadata Harvesting Loop: [see below](#image-metadata-harvesting-loop)
-
-#### Information Exchange: Establish Sub-Indexer
-###### Request
-- WFS endpoint
-
-###### Response
-- Sub-index ID - this can be used in subsequent requests to filter
-
-### Image Metadata Harvesting Loop
-<img src="http://www.websequencediagrams.com/files/render?link=SbbUAEoyFBpmMLmwXf7J"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW1hZ2UgTWV0YWRhdGEgSGFydmVzdGluZyBMb29wCgpwYXJ0aWNpcGFudAAlB0NhdGFsb2cgYXMgaWMADRNBcmNoaXZlABsFYQAzDVBpYXp6YSBhcyBwAAUFCgphdXRvbnVtYmVyIDEKCmxvb3AgV2hpbGUgbmV3IGltYWdlcyByZW1haW4KICBpYy0-aWE6IFF1ZXJ5IGZvcgAcBiBtAIE2BwogIGlhLT5pYzoAgU8HAA0MYwATBlByb2Nlc3MgaW5jb21pbmcAXgcKICBvcHQgaWYgbmVlZGVkCiAgAGoGAIEjBjogUG9zdACBEAVldmVudAogIGVuZAplbmQKCg&s=magazine&h=KPnRD8l2gfwnA_Q_)
-
-#### Information Exchange: Query for Image Metadata
-###### Request
-- Image Archive-specific
-
-###### Response
-- Image Archive-specific
-   - [image descriptors](#image-descriptors)
-
-#### Function: Process Incoming Images
-Add the image to the main index.
-
-#### Function: Test Image
-If sub-indexes exist, each image needs to tested against the filter criteria (features)
-
-#### Function: Add to Sub-Index
-Add the image to the designated sub-index.
-
-### Discover Images
+### Discover Scenes
 <img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)
 
-#### Function: Select Detection Image Criteria
-- [Detection image criteria](#detection-image-criteria)
+#### Function: Select Scene Discovery Criteria
+- [Scene criteria](#scene-criteria)
 
-#### Information Exchange: Discover Images
+#### Information Exchange: Discover Scenes
 ###### Request (Analyst)
-- [Detection image criteria](#detection-image-criteria) (JSON)
-- Continuation Options (execute Evaluate Images if needed)
+- [scene criteria](#scene-criteria)
+
+###### Response (JSON)
+- [Scene Descriptors](#scene-descriptor)
+
+#### Function: Retrieve Scenes
+- If caching is requested
+  - Search the repository for matching scenes
+  - Put matching scenes in the cache
+  - Periodically check the cache. If the cache is complete or sufficiently big, return the required results.
+  - Cap the cache size at a modest size to keep the memory footprint in check.
+- If caching is not requested (not recommended for large result sets as this might be slow)
+  - Search the repository for matching scenes
+  - Return the results
+
+### Shoreline Detection Brokering
+<img src="http://www.websequencediagrams.com/files/render?link=1wgcwbcPpI4Xwc_DUWC5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBCcm9rZXJpbmcKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NcHpzdmMtYmYtYgBXBSBhcyAABAYAExNleGVjAEIFenN2YwB1DUZpbGUgQnVja2UAgQEFZmIKYXV0b251bWJlciAxCgoAgRAHLT4AfAY6AIFNBwCBWwpzCgCBFgYtLT4-AIE9BzogQWNrbm93bGVkZ2VtZW50ADwKABkJSW5zcGVjdFxuYQAcDwBHBz4AgVAGAFwUAIFqBgAYClZhbGlkYXRlIElucHV0ABYJZmI6IFF1ZXJ5IGZvcgCDBAdlZACBLQxmYi0tPgBgCVByZXNlbmNlIG9mABkVCmFsdCBpbnZhbGlkIGkAZgUgAIJrBy0tPgCCFwlFcnJvciBtZXNzYWdlCmVsc2UgYWxyZWFkeSBjb2xsAIEABQAkFUxvY2EAhCcFb2ZcbgCBGxQARwUAcQ5yZWYgb3ZlcgCDcwcsAIQPBiwgZmIKICAgIFNlZToAhHoVRXhlY3V0aW9uACIFAIUXBiBhY3RzIGFzIENsaWVudAogIGVuZCByZWYAdzduZAoAg0QJAIQ1CFVwAIMkBVN0YXR1cwoKbG9vcCBSZWN1cgCGFgUgAIV9CACEZApHZXQAJgggIGFsdCBPcGVyAIIhBkluY29tcGxldGUAgWcFAIRzEwAwCQCDAQUAMApDABkfAIJpIQCCFgUAgVwGCgo&s=magazine&h=VAFSQ0cxEa7H2Pb_)
+
+#### Function: Select Detection Parameters
+- [Detection Parameters](#detection-parameters)
+
+#### Information Exchange: Detect Shorelines (Client)
+###### Request
+- [Detection Parameters](#detection-parameters)
 
 ###### Response
 - Acknowledgement
 
 #### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+The acknowledgement will contain either an error message or a job ID that can be used to monitor status.
 
-#### Information Exchange: Image Search
-###### Request (Analyst) (JSON)
-- [Detection image criteria](#detection-image-criteria)
+#### Information Exchange: Detect Shorelines (Piazza)
+###### Request (POST)
+- [Detection Parameters](#detection-parameters)
 
-###### Response (JSON)
-- [Image Descriptors](#image-descriptors)
+###### Response
+Note: the connection stays open until the operation completes.
+- An appropriate error -OR-
+- Process outputs
+  - Location of detected shorelines
+  
+#### Function: Prepare Input
+* Validate input
+* Get scene metadata from image catalog repository
+(we do not want the client to pass all metadata to the server 
+because we do not want to deal with the risk
+of it being incomplete or out of date.
+Instead, we pull the metadata directly from the image catalog.)
+* Determine where the output will be stored
 
-#### Function: Update Status
+#### Information Exchange: Query for Detected Shorelines
+###### Request
+- File identifier
 
-#### Information Exchange: Evaluate Images
-###### Request (JSON)
-- [Detection image criteria](#detection-image-criteria)
-- [Image Descriptors](#image-descriptors)
+###### Response
+- Presence of previous detection
 
-###### Response (JSON)
-- [Image Descriptors](#image-descriptors) including Beachfront Evaluation Score
+#### Information Exchange: File Metadata Search
+###### Request
+- File identifier
 
-#### Function: Image Evaluation
-It is a too early to tell what criteria will be used to score these images but cloud cover and image resolution are obvious ones.
-Some testing will need to be performed to determine what makes a good candidate image. 
-It is possible that this operation will have to reach back to the Image Catalog or even the Image Archive.
+###### Response
+- File metadata (if any)
+
+#### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
+
+#### Natural Color Image Creation - [see below](#natural-color-image-creation)
+
+#### Information Exchange: Update File Bucket Metadata
+###### Request
+- [File Bucket Metadata](#file-bucket-metadata)
+
+###### Response N/A
+
+#### Information Exchange: Get Detected Shorelines
+###### Request
+- File Request (File ID)
+- File Metadata Request (File ID)
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
+
+#### Information Exchange: Get File
+###### Request (out of scope)
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
+
+#### Function: Metadata Injection
+
+#### Function: Ingest Updated Shorelines ([see below](#ingest-file)
 
 #### Function: Update Status
 
@@ -222,13 +231,94 @@ It is possible that this operation will have to reach back to the Image Catalog 
 ###### Request
 - Job ID
 
-###### Response (JSON)
+###### Response
 - Job Status
 - If Complete
-  - [Image Descriptors](#image-descriptors) 
+  - Location of detected shorelines
 
-#### Function: Displayed Discovered Images
-- [Image Descriptors](#image-descriptors)
+### Detection Execution
+<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
+[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+
+#### Information Exchange: Detect Shorelines
+###### Request
+- [Detection Parameters](#detection-parameters)
+
+###### Response
+Note: the connection stays open until the operation completes.
+- An appropriate error -OR-
+- Process outputs
+  - Location of Detected Shorelines
+
+#### Information Exchange: Get Images
+###### Request: band image URLs
+###### Response: image files (TIFF)
+
+#### Information Exchange: Execute Algorithm
+###### Request (EXECUTE)
+- [Detection Parameters](#detection-parameters)
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+The executable may output its response in the file provided
+
+#### Function: Algorithm Execution
+
+#### Function: Ingest Detected Shorelines - [see below](#ingest-file)
+
+#### Function: Cleanup
+Cleanup activities like the following may be performed.
+- Delete input file
+- Delete output file
+
+### Natural Color Image Creation
+<img src="http://www.websequencediagrams.com/files/render?link=_VcVLUP4dl8MGi2T1zk6"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTmF0dXJhbCBDb2xvciBJbWFnZSBDcmVhdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudAAjB0FyY2hpdmUgYXMgaWEAEw1iZi1oYW5kbAAXBWNsaWVudAAzDVBpYXp6ACUOAHcGVG9vbABLBXQKCmFsdCBpAIEOBWFscmVhZHkgZXhpc3RzCiAATActPmlhOiBHZXQAgTQMCiAgaWEtPgBvBjoACw8AMAgAegY6IEluZ2VzAC8QAIEXBi0tPgAxFCBPYmplY3QgSUQKZWxzZQCBGgdtdXN0IGJlIGNyZWF0ZWQAgQ8TAIJWBkJhbmRzAIETDwCCcQUAgUkMAIEODwAsDgCBCxJCYW5kAIEMCgCCEwstPj5pdDogRXhlY3V0ZQCDThAgIGkAgX4LAIEREgCBfwcAPgUAgS4PdAAQBgCEJAUAUQcAQA8AgjkfADkFAII_FQCBEQUAglgibmQKAIM7EFNlcnYAgV0IaW4gR2VvAA0FcgoAgUEIABYTABQIAINgC01hcABGBWljZSBFbmRwb2ludAoK&s=magazine&h=kfp6SALOkj-8Uw--)
+
+#### Information Exchange: Get Color Image
+###### Request
+- Image URI
+
+###### Response
+- Color Image (TIFF) -or-
+- Not Found message
+
+#### Function: Ingest Color Image - [see below](#ingest-file)
+
+#### Information Exchange: Get Band Images
+###### Request (bf-handle)
+- Band Image URLs
+
+###### Response (Image Archive)
+- Band Images (TIFF)
+
+#### Function: Ingest Band Images - [see below](#ingest-file)
+
+#### Information Exchange: Execute Image Creation
+###### Request
+- Image Band Object IDs
+
+###### Response
+- Color Image Object ID
+
+#### Information Exchange: Get Band Images
+###### Request (pzsvc-exec)
+- Band Image Object IDs
+
+###### Response (Piazza)
+- Band Images (TIFF)
+
+#### Function: Create Color Image
+- Band merging
+- Color correction
+
+#### Information Exchange: Serve Image in Map Server
+###### Request
+- Color Image Object ID
+
+###### Response
+- Map Service Endpoint
+
+#### Function: Serve Image (out of scope)
 
 ### Ingest File
 <img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
@@ -262,181 +352,11 @@ The acknowledgement will provide either an error message or a job ID that can be
 - If Complete
   - Location of Ingested File
 
-### Shoreline Detection Brokering
-<img src="http://www.websequencediagrams.com/files/render?link=1wgcwbcPpI4Xwc_DUWC5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBCcm9rZXJpbmcKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NcHpzdmMtYmYtYgBXBSBhcyAABAYAExNleGVjAEIFenN2YwB1DUZpbGUgQnVja2UAgQEFZmIKYXV0b251bWJlciAxCgoAgRAHLT4AfAY6AIFNBwCBWwpzCgCBFgYtLT4-AIE9BzogQWNrbm93bGVkZ2VtZW50ADwKABkJSW5zcGVjdFxuYQAcDwBHBz4AgVAGAFwUAIFqBgAYClZhbGlkYXRlIElucHV0ABYJZmI6IFF1ZXJ5IGZvcgCDBAdlZACBLQxmYi0tPgBgCVByZXNlbmNlIG9mABkVCmFsdCBpbnZhbGlkIGkAZgUgAIJrBy0tPgCCFwlFcnJvciBtZXNzYWdlCmVsc2UgYWxyZWFkeSBjb2xsAIEABQAkFUxvY2EAhCcFb2ZcbgCBGxQARwUAcQ5yZWYgb3ZlcgCDcwcsAIQPBiwgZmIKICAgIFNlZToAhHoVRXhlY3V0aW9uACIFAIUXBiBhY3RzIGFzIENsaWVudAogIGVuZCByZWYAdzduZAoAg0QJAIQ1CFVwAIMkBVN0YXR1cwoKbG9vcCBSZWN1cgCGFgUgAIV9CACEZApHZXQAJgggIGFsdCBPcGVyAIIhBkluY29tcGxldGUAgWcFAIRzEwAwCQCDAQUAMApDABkfAIJpIQCCFgUAgVwGCgo&s=magazine&h=VAFSQ0cxEa7H2Pb_)
-
-#### Information Exchange: Detect Shorelines (Analyst)
-###### Request
-- [Detection Inputs](#detection-inputs)
-
-###### Response
-- Acknowledgement
-
-#### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
-
-#### Information Exchange: Detect Shorelines (Piazza)
-###### Request (POST)
-- [Detection Inputs](#detection-inputs)
-
-###### Response
-Note: the connection stays open until the operation completes.
-- An appropriate error -OR-
-- Process outputs
-  - Location of detected shorelines
-  
-#### Function: Validate Input
-This includes determining where the output will be stored
-
-#### Information Exchange: Query for Detected Shorelines
-###### Request
-- File identifier
-
-###### Response
-- Presence of previous detection
-
-#### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
-
-#### Natural Color Image Creation - [see below](#natural-color-image-creation)
-
-#### Information Exchange: Get Detected Shorelines
-###### Request
-- File Request (File ID)
-- File Metadata Request (File ID)
-
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
-
-#### Information Exchange: Update File Bucket Metadata
-###### Request
-- [File Bucket Metadata](#file-bucket-metadata)
-
-###### Response N/A
-
-#### Function: Metadata Injection
-
-#### Information Exchange: Store Updated Shorelines
-###### Request
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
-
-###### Response N/A
-
-#### Function: Update Status
-
-#### Information Exchange: Get Status 
-###### Request
-- Job ID
-
-###### Response
-- Job Status
-- If Complete
-  - Location of detected shorelines
-
-### Detection Execution
-<img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
-
-#### Information Exchange: Detect Shorelines
-###### Request
-- [Detection Inputs](#detection-inputs)
-
-###### Response
-Note: the connection stays open until the operation completes.
-- An appropriate error -OR-
-- Process outputs
-  - Location of Detected Shorelines
-
-#### Information Exchange: Get Images
-###### Request
-Image URL IDs
-###### Response
-Image files (TIFF)
-
-#### Information Exchange: Execute Algorithm
-###### Request (EXECUTE)
-- [Detection Inputs](#detection-inputs)
-
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-The executable may output its response in the file provided
-
-#### Function: Algorithm Execution
-
-#### Information Exchange: Store Detected Shorelines
-###### Request
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-
-###### Response N/A
-
-#### Function: Cleanup
-Cleanup activities like the following may be performed.
-- Delete input file
-- Delete output file
-
-### Natural Color Image Creation
-<img src="http://www.websequencediagrams.com/files/render?link=_VcVLUP4dl8MGi2T1zk6"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTmF0dXJhbCBDb2xvciBJbWFnZSBDcmVhdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudAAjB0FyY2hpdmUgYXMgaWEAEw1iZi1oYW5kbAAXBWNsaWVudAAzDVBpYXp6ACUOAHcGVG9vbABLBXQKCmFsdCBpAIEOBWFscmVhZHkgZXhpc3RzCiAATActPmlhOiBHZXQAgTQMCiAgaWEtPgBvBjoACw8AMAgAegY6IEluZ2VzAC8QAIEXBi0tPgAxFCBPYmplY3QgSUQKZWxzZQCBGgdtdXN0IGJlIGNyZWF0ZWQAgQ8TAIJWBkJhbmRzAIETDwCCcQUAgUkMAIEODwAsDgCBCxJCYW5kAIEMCgCCEwstPj5pdDogRXhlY3V0ZQCDThAgIGkAgX4LAIEREgCBfwcAPgUAgS4PdAAQBgCEJAUAUQcAQA8AgjkfADkFAII_FQCBEQUAglgibmQKAIM7EFNlcnYAgV0IaW4gR2VvAA0FcgoAgUEIABYTABQIAINgC01hcABGBWljZSBFbmRwb2ludAoK&s=magazine&h=kfp6SALOkj-8Uw--)
-
-#### Information Exchange: Get Color Image
-###### Request
-- Image URI
-
-###### Response
-- Color Image (TIFF) -or-
-- Not Found message
-
-#### Information Exchange: Ingest Color Image
-###### Request (bf-handle or pzsvc-exec)
-- Color Image (TIFF)
-
-###### Response
-- Color Image Object ID
-
-#### Information Exchange: Get Image Bands
-###### Request (bf-handle)
-- Image URIs
-
-###### Response (Image Archive)
-- Images (TIFF)
-
-#### Information Exchange: Ingest Image Bands
-###### Request
-- Image Bands (TIFF)
-
-###### Response
-- Images Band Object IDs
-
-#### Information Exchange: Execute Image Creation
-###### Request
-- Image Band Object IDs
-
-###### Response
-- Color Image Object ID
-
-#### Information Exchange: Get Image Bands
-###### Request (pzsvc-exec)
-- Image Band Object IDs
-
-###### Response (Piazza)
-- Images (TIFF)
-
-#### Function: Create Color Image
-- Band merging
-- Color correction
-
-#### Information Exchange: Serve Image in Map Server
-###### Request
-- Color Image Object ID
-
-###### Response
-- Map Service Endpoint
-
-#### Function: Serve Image
-
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUmV2aWV3IERldGVjdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0AAcNUGlhenphABoNRmVhdHVyZSBSZXBvc2l0b3J5IGFzIGZyAD8NYmYtYW5hbHl6ZQoKbm90ZSBvdmVyAFoILCBmciwAGAs6CiAgUHJlY29uZGl0aW9uczogQ2xvdWQgZGVwbG95bWVudCwgU2VydmljZSByZWdpc3RyYXRpb24sIGYAgQYHaG9zdGluZwplbmQgbm90ZQoKAIFHBy0-AIE9BjoAgXkSAIFWBi0tPj4AgXMHOiBBY2tub3dsZWRnZW1lbnQAGwgAOwlQcmVwYQCBdwV2aWV3ABYJZnI6IEdldCBCYXNlbGluZQCCHAhzCmZyAHcKAAwSAFcIAIIACwCDAAZ6ZSBMaW5lU3RyaW5ncwoAgkQKAB4OUGVyZm9ybSAAgmYFc2kAGw4AgXAIAINRBmlzIFJlc3VsdABsCmZyOiBTdG9yAIEkC2xvb3AgcmVjdXJyaW5nCiAAhAwIAII8CkdldCBTdGF0dXMKICBhbHQgT3BlAIMHBiBpbmNvbXBsZXRlCiAgIACENActAIJTCgAuCWVsc2UALQsAGB5Mb2MAWQZvZiBcbgCBPBEgIGVuZAplbmQK&s=magazine&h=bv3g9EzcODmTzsBD)
+
+*Note: This has not been implemented yet.*
 
 #### Double-check - how are we decorating the output?
 
@@ -510,11 +430,11 @@ Cleanup activities like the following may be performed.
 
 #### Information Exchange: Map Request
 ###### Request (Analyst)
-- WMS or WMTS request for base image
+- WMS or WMTS request for map layer image
 
 ###### Response (Map Server)
-- JPG images
+- Map layer images (JPG most likely)
 
 #### Function: Display Map
 - Detected Shorelines
-- Base Image (as JPG)
+- Map layer image (as JPG)
