@@ -206,25 +206,6 @@ Instead, we pull the metadata directly from the image catalog.)
 
 ###### Response N/A
 
-#### Information Exchange: Get Detected Shorelines
-###### Request
-- File Request (File ID)
-- File Metadata Request (File ID)
-
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
-
-#### Information Exchange: Get File
-###### Request (out of scope)
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
-
-#### Function: Metadata Injection
-
-#### Function: Ingest Updated Shorelines ([see below](#ingest-file)
-
 #### Function: Update Status
 
 #### Information Exchange: Get Status 
@@ -351,6 +332,45 @@ The acknowledgement will provide either an error message or a job ID that can be
 - Job Status
 - If Complete
   - Location of Ingested File
+
+### Metadata Injection
+<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTWV0YWRhdGEgSW5qZWN0aW9uCgpwYXJ0aWNpcGFudCBiZi1oYW5kbGUgYXMgYnJva2VyABMNUGlhenphIGFzIHAABQUAMA1GaWxlIEJ1Y2tldCBhcyBmYgBODVRpZGUgUHJlZGkAcwUgU2VydmljAGQFdHBzCgphdXRvbnVtYmVyIDEKCgB2Bi0-AGEGOiBHZXQgRGV0ZWN0ZWQgU2hvcmVsaW5lcwoAgQEGLT5mYgAeBkZpbGUKZmIALwoADAUAHggAgUwGOgA1FWxvb3AgZm9yIGVhY2ggZmVhdHVyZQogAIF_BwAyCkNvbGxlY3QgQ2VudHJvaWQKZW5kAIEmCnRwcwCBJwZUaWRlcwp0cHMAbAoADQYAgVIJAIEFCFVwZGF0AIMRCgoKcmVmIG92ZXIAgnoHLACCZAcgIEluZ2VzdAAqB2QAgWYGICBTZWU6ABMIAAwHAIM8C2N0cyBhcyBDbGllbnQKZW5kIHJlZgoK&s=magazine&h=36UnIYFR8zbULJGC)
+
+#### Information Exchange: Get Detected Shorelines
+###### Request
+- File Request (File ID)
+- File Metadata Request (File ID)
+
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
+
+#### Information Exchange: Get File
+###### Request (out of scope)
+###### Response
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+- [File Bucket Metadata](#file-bucket-metadata)
+
+#### Function: Collect Centroid
+We need a point to run tide prediction on for each detected shoreline feature.
+While some of the features may be rather large, 
+there still should not be a significant amount of tide variation.
+
+#### Information Exchange: Get Tides
+###### Request
+- Points (lon, lat)
+
+###### Response
+- Tides
+  - Point (lon, lat)
+  - 24h Max tide
+  - 24h Min tide
+  - actual tide
+
+#### Function: Update Metadata
+Incorporate all available metadata into the shorelines file
+
+#### Function: Ingest Updated Shorelines ([see below](#ingest-file)
 
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
