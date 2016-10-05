@@ -21,7 +21,7 @@ from an external image archive.
   - true: ignore existing scenes and reharvest everything
   - false: stop when a scene already exists in catalog
 - cap
-  - true: caps catalog size to 1000 scenes (for testing only)
+  - int > 0: caps catalog size to roughly that many scenes (for testing only)
 - optionsKey
   - not-empty: suffix for key containing harvest options (overrides everything above except for Image Archive and `event`)
 
