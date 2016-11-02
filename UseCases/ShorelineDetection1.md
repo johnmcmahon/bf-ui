@@ -6,6 +6,12 @@
 ### Detection Inputs
 - Beachfront credentials
 - Image(s) (Data ID)
+- Image metadata
+   - ground sample distance
+   - source (e.g., LandSat8)
+   - footprint
+   - cloud cover
+   - other as needed
 - Area of Interest (GeoJSON Geometry)
 - Algorithm ID
 - Algorithm executable command
@@ -174,7 +180,7 @@ The request requires authentication and authorization with Piazza
 #### Function: Retrieve file from storage (Piazza)
 Out of scope
 
-#### Information Exchange: Get File (Internal or External File Service)
+#### Information Exchange: Get File (Trusted or Untrusted File Service)
 ###### Request (Client or Ingester)
 - Vendor-specific credentials
 - URL
@@ -185,12 +191,12 @@ Out of scope
 
 ###### Security
 In most cases the request requires authentication and authorization 
-with the file provider
+with the file provider (e.g., Planet Labs)
 
 #### Function: Retrieve file from storage (File Service)
 Out of scope
 
-#### Information Exchange: Get File (External Service via Ingester)
+#### Information Exchange: Get File (Untrusted Service via Ingester)
 ###### Request (Async)
 - Vendor-specific credentials
 - File ID
@@ -211,7 +217,7 @@ out of scope
 
 #### Information Exchange: Update Metadata
 ###### Request
-* File (POST)
+* File (PUT)
 
 ###### Response N/A
 
@@ -226,8 +232,8 @@ with the owner of the file bucket (e.g., Piazza).
 The file is the [Detected Shorelines](#detected-shorelines) GeoJSON.
 
 #### Function: Collect Centroid
-We need to pick a single point for each shoreline. 
-Extremely large shorelines will have lower accuracy as you move away from the centroid.
+We need to pick a single point for each scene. 
+Large scenes will have lower tide accuracy as you move away from the centroid.
 
 #### Information Exchange: Get Tide
 ###### Request
@@ -245,30 +251,33 @@ Extremely large shorelines will have lower accuracy as you move away from the ce
   - Tide amount
 
 ###### Security
-The request requires authentication and authorization 
+The request may require authentication and authorization 
 with the owner of the tide prediction service.
 
 #### Function: Update Metadata
+Each feature has its metadata updated based on tide information
+and whatever else is already on hand.
 
 #### Information Exchange: Ingest File [see above](#ingest-file)
-Re-ingest the file with the same ID to update it.
+Re-ingest the file and get a new file ID.
 
 ### Deploy File
 <img src="http://www.websequencediagrams.com/files/render?link=zcB_Y1rADqVSojC3DmXB"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGVwbG95IEZpbGUKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANUGlhenphIGFzIHAABQUALQ1XZWIgRmVhdHVyZSBTZXJ2ZXIgYXMgd2ZzCgoARQYtPisAMQY6AHINAEUGLT53ZnMABBUtPj4tAIEGBjoAgSsFAIE1B21lbnQgcmVzdWx0cwoK&s=magazine&h=iF7Iatn5TDSdzjso)
 
 #### Information Exchange: Deploy File
-#### Request (Async)
+###### Request
 - Piazza Credentials
 - File
 
-#### Response
+###### Response
+- Deployment ID
 
 ###### Security
 The request requires authentication and authorization 
 with the owner of the WFS (e.g., Piazza).
 
 #### Function: Deploy File
-Piazza 
+out of scope
 
 ### Display Detected Shorelines
 <img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
