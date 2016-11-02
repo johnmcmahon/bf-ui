@@ -33,15 +33,28 @@ GeoJSON Feature Collection
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
-##### Cloud Deployment
+###### Cloud Deployment
 - [x] bf-handle
 - [x] pzsvc-exec
 - [x] Detection algorithm
 
+###### Service Registration
+The following services are registered into Piazza so that bf-ui can find them:
+- [x] bf-handle
+- [x] pzsvc-exec / pzsvc-ossim (the detection algorithm)
+- [x] tide service
+
+#### Information Exchange: Discover Services
+###### Request - GET /service
+
+###### Response
+- Piazza service list
+
+###### Security
+The request requires authentication and authorization with Piazza.
+
 #### Function: Select Input Parameters
 [Detection Inputs](#detection-inputs)
-
-#### Ingest File - [see below](#ingest-file)
 
 #### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
 
@@ -76,31 +89,6 @@ This pattern is used throughout and is indicated by a bar around the swim lane.
 
 ###### Response
 - variable
-
-### Ingest File
-<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
-
-#### Information Exchange: Ingest File 
-###### Request
-* File (POST) -OR-
-* File URL
-* Piazza credentials
-
-###### Response (Async)
-- Job Status
-- If Complete
-  - Location of Ingested File
-
-###### Security
-The request requires authentication and authorization 
-with the owner of the file bucket (e.g., Piazza).
-
-#### Information Exchange: Store File 
-###### Request
-* File (POST) -OR-
-* File URL
-
-###### Response N/A
 
 ### Shoreline Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
@@ -145,7 +133,7 @@ The executable may output its response in the file provided
 
 #### Function: Inspect Results (pzsvc-exec)
 
-#### Information Exchange: Store Detected Shorelines [see above](#ingest-file)
+#### Information Exchange: Store Detected Shorelines [see below](#ingest-file)
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
 
 #### Function: Compose Response
@@ -211,6 +199,31 @@ with the file provider. It may separately require A/A with the ingester
 
 #### Function: Sanitize File
 out of scope
+
+### Ingest File
+<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
+
+#### Information Exchange: Ingest File 
+###### Request
+* File (POST) -OR-
+* File URL
+* Piazza credentials
+
+###### Response (Async)
+- Job Status
+- If Complete
+  - Location of Ingested File
+
+###### Security
+The request requires authentication and authorization 
+with the owner of the file bucket (e.g., Piazza).
+
+#### Information Exchange: Store File 
+###### Request
+* File (POST) -OR-
+* File URL
+
+###### Response N/A
 
 ### Update File Metadata
 <img src="http://www.websequencediagrams.com/files/render?link=o6iD927xwL_FMR3vboSo"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgVXBkYXRlIEZpbGUgTWV0YWRhdGEKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANUGlhenphIGFzIHAABQUALQ0AUAVCdWNrZQA6BWZiCgoAPQYtPisAKQY6AGoWAEYGLT5mYjoAgRkHAAsQLT4-LQCBCQYAOgkAgTYIIHJlc3VsdHMKCg&s=magazine&h=4NI09Ift5nkg6teC)
@@ -282,19 +295,14 @@ out of scope
 ### Display Detected Shorelines
 <img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
 
-#### Information Exchange: Get Detected Shorelines
-###### Request (Analyst)
-- File identifier for Detected Shorelines
+#### Information Exchange: Get Map
+###### Request
+- GetMap request
 
-###### Response (Piazza)
-- [Detected shorelines](#detected-shorelines)
+###### Response
+- Map image
 
-#### Information Exchange: File Request
-###### Request (Piazza)
-- File identifier
+#### Function: Display Map
 
-###### Response (File Bucket)
-- [Detected shorelines](#detected-shorelines)
-
-#### Function: Display Detected Shorelines
-
+#### Information Exchange: Get File [see above](#get-file)
+The requested file is the Detected Shorelines
