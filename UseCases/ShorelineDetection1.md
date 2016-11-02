@@ -1,9 +1,10 @@
 # Shoreline Detection MVP1
-- This is a simple workflow showing the ability to submit an image to Piazza and get back a set of candidate shorelines.
+- This is a simple workflow showing the ability to submit a set of images that make up a scene to Beachfront and get back a set of candidate shorelines.
 - Detection algorithms themselves are independent of this workflow. They can be changed or updated at will as they become available.
 
 ## Data Models
 ### Detection Inputs
+- Beachfront credentials
 - Image(s) (Data ID)
 - Area of Interest (GeoJSON Geometry)
 - Algorithm ID
@@ -16,6 +17,7 @@
 GeoJSON Feature Collection
 - features
   - geometry
+  - metadata
 
 ## Concept of Operations
 ### High Level
@@ -26,19 +28,16 @@ GeoJSON Feature Collection
 These activities are out of scope for this use case, but required for it to be successful.
 
 ##### Cloud Deployment
+- [x] bf-handle
 - [x] pzsvc-exec
 - [x] Detection algorithm
-- [x] Input images
-
-##### Service Registration
-- [x] pzsvc-exec
 
 #### Function: Select Input Parameters
 [Detection Inputs](#detection-inputs)
 
 #### Ingest File - [see below](#ingest-file)
 
-#### Shoreline Detection Passthrough - [see below](#shoreline-detection-passthrough)
+#### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
 
 #### Display Detected Shorelines - [see below](#display-detected-shorelines)
 
@@ -49,12 +48,12 @@ These activities are out of scope for this use case, but required for it to be s
 ###### Request
 * File (POST) -OR-
 * File URL
+* Piazza credentials
 
-###### Response
-Acknowledgement
-
-#### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+###### Response (Async)
+- Job Status
+- If Complete
+  - Location of Ingested File
 
 #### Information Exchange: Store File 
 ###### Request
@@ -63,44 +62,7 @@ The acknowledgement will provide either an error message or a job ID that can be
 
 ###### Response N/A
 
-#### Function: Update Status
-
-#### Information Exchange: Get Status 
-###### Request
-- Job ID
-
-###### Response
-- Job Status
-- If Complete
-  - Location of Ingested File
-
-### Shoreline Detection Passthrough
-<img src="http://www.websequencediagrams.com/files/render?link=Yc5E25woSGfrm-8AzFgE"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBQYXNzdGhyb3VnaAoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDUZpbGUgQnVja2UAOwVmYgoKAD0HLT5yZWYgb3ZlcgAxBywgZmI6AIEXBwCBJQpzCiAgU2UAgSoMRXhlY3V0aW9uCiAAcwljdHMgYXMgQ2xpZW50CmVuZCByZWYKCgCBCwYtPgCBEwY6IFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgVcIACcKR2V0ACYIICBhbHQgT3BlcmEAgjgFSW5jb21wbGV0ZQogICAAgXUHLS0-PgCCHQc6AC8KZWxzZQAvC0MAGR9Mb2MAXQZvZlxuAIMoBmVkAIIEDmVuZAplbmQK&s=magazine&h=H7kEmTJ7i7SKowA7)
-
-#### Information Exchange: Get Detected Shorelines
-###### Request (Analyst)
-- [Detection Inputs](#detection-inputs)
-
-###### Response 
-- Acknowledgement
-
-#### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
-
-#### Detection Execution: [see below](#detection-execution)
-
-#### Function: Update Status
-
-#### Information Exchange: Get Status 
-###### Request
-- Job ID
-
-###### Response
-- Job Status
-- If Complete
-  - Location of detected shorelines
-
-### Detection Execution
+### Shoreline Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
 [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
 
@@ -108,45 +70,100 @@ The acknowledgement will provide either an error message or a job ID that can be
 ###### Request
 - [Detection Inputs](#detection-inputs)
 
-###### Response
-Note: the connection stays open until the operation completes.
+###### Response (Async)
+- An appropriate error -OR-
+- File Identifier for Detected Shorelines
+
+#### Information Exchange: Execute
+###### Request
+- [Detection Inputs](#detection-inputs)
+
+###### Response (Async)
 - An appropriate error -OR-
 - Process outputs
-  - Location of Detected Shorelines
+  - File Identifier for Detected Shorelines
 
-#### Information Exchange: Get Image
-###### Request
-Image URL
-###### Response
-Image file
+#### Information Exchange: Get File [see below](#get-file)
 
 #### Information Exchange: Execute Algorithm
 ###### Request (EXECUTE)
 - [Detection Inputs](#detection-inputs)
 
 ###### Response
+- Error message -OR-
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
 The executable may output its response in the file provided
 
 #### Function: Algorithm Execution
 
-#### Information Exchange: Store Detected Shorelines
-###### Request
+#### Information Exchange: Store Detected Shorelines [see above](#ingest-file)
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
-
-###### Response N/A
 
 #### Function: Cleanup
 Cleanup activities like the following may be performed.
 - Delete input file
 - Delete output file
 
+### Get File
+<img src="http://www.websequencediagrams.com/files/render?link=jvzUD9TbAYdAbhNeckH7"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgR2V0IEZpbGUKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANSW5nZXN0ZXIgYXMgaQAFBwAxDUZpbGUgU2VydmljZSBhcyBmcwBQDVBpYXp6YSBhcyBwAAUFCgpvcHQgaW1hZ2Ugc3RvcmVkIGluAB8HCiAAewctPgAnBjoAgSgKIAA5By0-AIEfBjoAgUMGZWxzZSBmaWwAQQxpbnRlcm5hbCBzAIEQBgBMC2ZzAEYNZnMALCNleAA2GSsAggoIAIEcDQCCHwgAZQpmAGUKACgKAB0RAEMKU2FuaXRpemUAQBItAIFwDm5kCgo&s=magazine&h=ULJTScp0KAnA_yeC)
+
+#### Information Exchange: Get File (Piazza)
+###### Request
+- Piazza credentials
+- File ID
+
+###### Response
+- File
+
+#### Information Exchange: Get File (Internal Service)
+###### Request
+- Vendor-specific credentials
+- File ID
+
+###### Response
+- File
+
+#### Information Exchange: Get File (External Service)
+###### Request (Async)
+- Vendor-specific credentials
+- File ID
+
+###### Response
+- File
+
+#### Function: Sanitize File
+out of scope
+
+### Update File Metadata
+<img src="http://www.websequencediagrams.com/files/render?link=o6iD927xwL_FMR3vboSo"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgVXBkYXRlIEZpbGUgTWV0YWRhdGEKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANUGlhenphIGFzIHAABQUALQ0AUAVCdWNrZQA6BWZiCgoAPQYtPisAKQY6AGoWAEYGLT5mYjoAgRkHAAsQLT4-LQCBCQYAOgkAgTYIIHJlc3VsdHMKCg&s=magazine&h=4NI09Ift5nkg6teC)
+
+#### Information Exchange: Ingest File 
+###### Request
+* File (POST)
+* Piazza credentials
+
+###### Response (Async)
+- Job Status
+
+#### Information Exchange: Update Metadata
+###### Request
+* File (POST) -OR-
+* File URL
+
+###### Response N/A
+
+### Metadata Injection
+<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTWV0YWRhdGEgSW5qZWN0aW9uCgpwYXJ0aWNpcGFudCBiZi1oYW5kbGUgYXMgYnJva2VyABMNUGlhenphIGFzIHAABQUAMA1GaWxlIEJ1Y2tldCBhcyBmYgBODVRpZGUgUHJlZGkAcwUgU2VydmljAGQFdHBzCgphdXRvbnVtYmVyIDEKCgB2Bi0-AGEGOiBHZXQgRGV0ZWN0ZWQgU2hvcmVsaW5lcwoAgQEGLT5mYgAeBkZpbGUKZmIALwoADAUAHggAgUwGOgA1FWxvb3AgZm9yIGVhY2ggZmVhdHVyZQogAIF_BwAyCkNvbGxlY3QgQ2VudHJvaWQKZW5kAIEmCnRwcwCBJwZUaWRlcwp0cHMAbAoADQYAgVIJAIEFCFVwZGF0AIMRCgoKcmVmIG92ZXIAgnoHLACCZAcgIEluZ2VzdAAqB2QAgWYGICBTZWU6ABMIAAwHAIM8C2N0cyBhcyBDbGllbnQKZW5kIHJlZgoK&s=magazine&h=36UnIYFR8zbULJGC)
+
+TBD
+
 ### Display Detected Shorelines
 <img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
 
 #### Information Exchange: Get Detected Shorelines
 ###### Request (Analyst)
-- File identifier
+- File identifier for Detected Shorelines
 
 ###### Response (Piazza)
 - [Detected shorelines](#detected-shorelines)
