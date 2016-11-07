@@ -39,7 +39,7 @@ These activities are out of scope for this use case, but required for it to be s
 - [x] Detection algorithm
 
 ###### Service Registration
-The following services are registered into Piazza so that bf-ui can find them:
+The following services are registered into ~~Piazza~~ the environment so that bf-ui can find them:
 - [x] bf-handle
 - [x] pzsvc-exec / pzsvc-ossim (the detection algorithm)
 - [x] tide service
@@ -52,6 +52,9 @@ The following services are registered into Piazza so that bf-ui can find them:
 
 ###### Security
 The request requires authentication and authorization with Piazza.
+
+#### Function: Get Available Services
+[Registered Services](#registered-services) are loaded from the environment
 
 #### Function: Select Input Parameters
 [Detection Inputs](#detection-inputs)
@@ -76,6 +79,24 @@ This pattern is used throughout and is indicated by a bar around the swim lane.
 - update job status
 - variable
 
+#### Information Exchange: Authenticate
+Authentication is through an externally controlled system.
+###### Request
+- authentication token
+
+###### Response
+- confirmation
+
+#### Information Exchange: Authorize
+Authorization is through an internally controlled system 
+that manages users and roles
+###### Request
+- authorization token
+- role
+
+###### Response
+- confirmation
+
 #### Information Exchange: Get Status
 ###### Request
 - variable
@@ -92,7 +113,7 @@ This pattern is used throughout and is indicated by a bar around the swim lane.
 
 ### Shoreline Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAxCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IGJmLXVpIGFzIGNsaWVudAAPDVBpYXp6YSBhcyBwAAUFCgpOb3RlIG92ZXIAKAc6IAogIFByZWNvbmRpdGlvbnM6IENsb3VkIGRlcGxveW1lbnQsIAogIHNlcnZpY2UgcmVnaXN0cmF0aW9uLAogIGltYWdlIGF2YWlsYWJpbGl0eQplbmQgbm90ZQoKAIENBi0-AHgGOiBEaXNjAHgFUwBIBnMKAIESBi0tPj4AgQgIQQBFBmxlABsKAD8JAIEsCFNlbGVjdCBpbnB1dCBwYXJhbWV0ZXJzCgpyZWYAgVIMCiAgU2VlOgCCQAsAglYGaW9uIEV4ZWN1dGlvbgogIEFuYWx5c3QgYWN0cyBhcyBDAIJFBmVuZCByZWYAbhFJbnNwZWN0IFJlc3VsdHMKYWx0AIMuB2VkAIMtCnMKICAAfhIAgQsHRGlzcGxheQAgFwBxCGVsc2UgRXJyb3IKIACDWQcAgXsKADsIZXJyb3IgbWVzc2FnZQplbmQK&s=magazine&h=P8v6Uw8Ug52ekXmE)
 
 #### Information Exchange: Detect Shorelines
 ###### Request (Async)
@@ -104,6 +125,9 @@ This pattern is used throughout and is indicated by a bar around the swim lane.
 
 ###### Security
 The request requires authentication and authorization with Beachfront
+
+#### Function Prepare Executable Call
+- Build executable command
 
 #### Information Exchange: Execute
 ###### Request (Async)
