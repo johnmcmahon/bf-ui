@@ -6,6 +6,8 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - The analyst chooses images and the process proceeds as before
 - The analyst has the ability to review the results
 
+<img src="uc2.png"/>
+
 ## Data Models
 ### Detection Algorithms
 - ID
@@ -13,12 +15,6 @@ This is an extension of [Use Case 1](ShorelineDetection1.md).
 - Description
 - Input constraints
 - Parameters
-
-### SubIndexes
-- name
-- key (read-only)
-- WFS URL
-- feature type name
 
 ### Scene Criteria
 - Date of Collection (ISO-8601)
@@ -70,45 +66,43 @@ TBD
 ## Concept of Operations
 ### High Level
 <img src="http://www.websequencediagrams.com/files/render?link=D9axg9OAxnfJh6duGlpZ"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAyCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QABw1QaWF6emEKCk5vdGUgb3ZlcgAeCCwAFAc6IAogIFByZWNvbmRpdGlvbnM6IFNlcnZpY2UgcmVnaXN0cmF0aW9uLCBNZXRhZGF0YSBoYXJ2ZXN0aW5nCmVuZCBub3RlCgoAdgctPgCAfwc6IFNlbGVjdCBBT0kAEwtyZWYAgQEGAHYIRGlzYwCBEwVDYW5kaWRhdGUgSW1hZ2VzCiAgU2VlIE5vbWluAAsLZW5kIHJlZi0tPgBgCgAqEQBVG0V2YWx1YXRlAFgYABcJAFUbAIEcBSBTY29yAF8NAIFqEGkAIgV0byBhbmFseXplCgpvcHQgaWYgbmVlZGVkCiAAgyoILT4AgwQIR2V0AINuB2lvbiBBbGdvcml0aG1zCiAAg0MHAIFrDQAVFWVuZCAAglQdAIRFDwCCYQgABhIAglcUQWNrbm93bGVkZ2VtZW50AINkFEluc3AAg3QFABsQbG9vcCBSZWN1cnJpbmcAgWcYU3RhdHVzCiAgYWx0IE9wZQCEeQYgQ29tcGxldGUKICAAggMJAIRiClByb3Bvc2VkAIFJDmVsc2UgSW5jAB4dAGcJZW5kCmVuZACFNxRSZXZpZXcgcABeCHMAgjMK&s=magazine&h=QNPoqJueVeUx70un)
+[original file](https://www.websequencediagrams.com/#open=133232)
 
 #### Preconditions
 These activities are out of scope for this use case, but required for it to be successful.
 
 ##### Cloud Deployment
-- [ ] service reporting the available detection algorithms
+- [x] service reporting the available detection algorithms
 - [x] pzsvc-image-catalog
-- [x] bf-handle
-- [x] pzsvc-exec
+- [ ] bf-api
 - [x] detection algorithms
+- [x] tide service
+- [ ] PostGRES
+- [ ] GeoServer
 
-##### Service Registration
-- [x] bf-handle
-- [x] pzsvc-exec
+##### Piazza Service Registration
+- [x] detection algorithms
 
 ##### Metadata Harvesting
 - [x] One or more image archives must be established. They may be managed inside or outside Piazza. 
 - [x] The image catalog must be populated with metadata about available images from each image archive.
 
-#### Information Exchange: Get Detection Algorithms
-###### Request
-- N/A
+#### Function: Get Available Services
+Location of [deployed services](#cloud-deployment) is loaded from the environment.
 
-###### Response (JSON)
-- [Detection Algorithms](#detection-algorithms)
+#### Information Exchange: Discover Algorithms
+###### Request - GET /service
+- Piazza auth key
 
-###### Implementation Considerations
-1. If the available algorithms are expected to be stable, this operation is unnecessary.
-2. If users are constrained from using certain algorithms for some reason, this operation would be helpful.
-
-#### Information Exchange: Get SubIndexes
-###### Request: GET `pzsvc-image-catalog.../subIndex`
 ###### Response
-- [SubIndexes](#subindex)
+- Piazza service list
 
-#### Function: Display Discovery Criteria
-- [Detection Algorithms](#detection-algorithms)
-- [SubIndexes](#subindex)
+###### Security
+The request requires authentication and authorization with Piazza.
+
+#### Function: Authentication
+The user is presented with an authentication challenge. 
+The user provides credentials via OAUTH2 which are verified by an IdAM component.
 
 #### Function: Discover Scenes - [see below](#discover-scenes)
 
@@ -124,20 +118,122 @@ These activities are out of scope for this use case, but required for it to be s
 
 #### Function: Display Detected Shorelines - [see below](#display-detected-shorelines)
 
+### Asynchronous Action (pattern)
+<img src="http://www.websequencediagrams.com/files/render?link=PSQ3ecG5LfFwcsvn3YM5"/> [original file](https://www.websequencediagrams.com/#open=184352)
+
+This pattern is used throughout and is indicated by a bar around the swim lane.
+
+#### Information Exchange: Request
+###### Request
+In most cases these asynchronous requests require authentication and authorization. Therefore the requests will be wrapped in a JWT that contains the security assertion for that user.
+- JSON Web Token (JWT) 
+   - Security Assertion
+   - _variable_
+
+###### Response
+- Job ID
+
+#### Function: Operation
+- update job status
+- _variable_
+
+#### Information Exchange: Authenticate
+Authentication is through an externally controlled system.
+###### Request
+- authentication token
+
+###### Response
+- confirmation
+
+#### Information Exchange: Authorize
+Authorization is through an internally controlled system 
+that manages users and roles.
+###### Request
+- authorization token
+- role
+
+###### Response
+- confirmation
+
+#### Information Exchange: Log
+###### Request
+- User ID
+- Operation
+- Operation status
+
+###### Response: N/A
+
+#### Information Exchange: Get Status
+###### Request
+- _variable_
+
+###### Response
+- status
+
+#### Information Exchange: Get Results
+###### Request
+- _variable_
+
+###### Response
+- _variable_
+
 ### Discover Scenes
-<img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzY292ZXIgSW1hZ2VzCgpwYXJ0aWNpcGFudCBBbmFseXN0IGFzIGEABQYAEg1QaWF6emEgYXMgcAAFBQAvDQBLBSBDYXRhbG9nIGFzIGljAE8NcHpzdmMtYmYtZXZhbAoKYXV0b251bWJlciAxCgoAZwctPgBwBzogU2VsZWN0IHNlYXJjaCBjcml0ZXJpYQAfCgB8BjoAgUYKaQCBSgYAgRQGLS0-AEEKQWNrbm93bGVkZ2VtZW50ABsIPmljOiBTAFoGZm8AOAlpYwBTCgCBTgZNZXRhZGF0YQAwCQB0CFVwZGF0ZSBTdGF0dXMKb3B0IE9wdGlvbmFsCiAAghwHLT4AgWsNOiBFdmFsdWF0ZQCCeAggIGxvb3AgZWFjaACBPQYKICAgAIIfDgAzEQCCZQYAQwdpb24KICBlbmQKACUSAIEbDWQAgxwHRGVzY3JpcHRvcnMAgRsMAIE_FWVuZAoAgRsFUmVjdXJyaW5nCiAAhBMIAIJ6CkdldACBfQggIGFsdCBPcGVyAIEVBSBJbmNvbXBsZXQAgVEHAIJ0BwCDXQoALwhlbHNlAC0LQwAZHQCDCQ8AgXkGZW5kCg&s=magazine&h=qvQ8sbuINNK7POEF)
+<img src="http://www.websequencediagrams.com/files/render?link=vkRjFvkvfOmfdHLonhaF"/> [original file](https://www.websequencediagrams.com/#open=142856)
+
+#### Preconditions
+- [x] Metadata Harvesting -or-
+- [ ] Load Image Provider locations from environment
 
 #### Function: Select Scene Discovery Criteria
 - [Scene criteria](#scene-criteria)
 
 #### Information Exchange: Discover Scenes
 ###### Request (Analyst)
-- [scene criteria](#scene-criteria)
+- JWT
+  - [scene criteria](#scene-criteria)
+  - security assertion
+  - Image Provider security token (if needed)
 
 ###### Response (JSON)
 - [Scene Descriptors](#scene-descriptor)
 
+###### Security
+This information exchange requires authentication and authorization. 
+Therefore the request must contain a security assertion 
+that is validated before the operation proceeds.
+
+#### Information Exchange: Search Images
+If there is no image catalog, federate a call to all registered image providers
+###### Request
+- [scene criteria](#scene-criteria) (vendor-specific format)
+- Image Provider security token
+
+###### Response
+- [Scene Descriptors](#scene-descriptor) (vendor-specific format)
+
+#### Information Exchange: Get Tides
+###### Request
+- Descriptor
+  - Date/time (YYYY-MM-DD-hh-mm)
+  - lat
+  - lon
+
+###### Response
+- Tide Descriptor
+  - Date/time
+  - lat
+  - lon
+  - results
+    - 24h Max
+    - 24h Min
+    - Tide amount
+
+###### Security
+The request may require authentication and authorization 
+with the owner of the tide prediction service.
+
 #### Function: Retrieve Scenes
+- If there is no image catalog, assemble results from the responses from the Image Provider and the Tide Prediction Service 
 - If caching is requested
   - Search the repository for matching scenes
   - Put matching scenes in the cache
@@ -147,173 +243,198 @@ These activities are out of scope for this use case, but required for it to be s
   - Search the repository for matching scenes
   - Return the results
 
-### Shoreline Detection Brokering
-<img src="http://www.websequencediagrams.com/files/render?link=1wgcwbcPpI4Xwc_DUWC5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBCcm9rZXJpbmcKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NcHpzdmMtYmYtYgBXBSBhcyAABAYAExNleGVjAEIFenN2YwB1DUZpbGUgQnVja2UAgQEFZmIKYXV0b251bWJlciAxCgoAgRAHLT4AfAY6AIFNBwCBWwpzCgCBFgYtLT4-AIE9BzogQWNrbm93bGVkZ2VtZW50ADwKABkJSW5zcGVjdFxuYQAcDwBHBz4AgVAGAFwUAIFqBgAYClZhbGlkYXRlIElucHV0ABYJZmI6IFF1ZXJ5IGZvcgCDBAdlZACBLQxmYi0tPgBgCVByZXNlbmNlIG9mABkVCmFsdCBpbnZhbGlkIGkAZgUgAIJrBy0tPgCCFwlFcnJvciBtZXNzYWdlCmVsc2UgYWxyZWFkeSBjb2xsAIEABQAkFUxvY2EAhCcFb2ZcbgCBGxQARwUAcQ5yZWYgb3ZlcgCDcwcsAIQPBiwgZmIKICAgIFNlZToAhHoVRXhlY3V0aW9uACIFAIUXBiBhY3RzIGFzIENsaWVudAogIGVuZCByZWYAdzduZAoAg0QJAIQ1CFVwAIMkBVN0YXR1cwoKbG9vcCBSZWN1cgCGFgUgAIV9CACEZApHZXQAJgggIGFsdCBPcGVyAIIhBkluY29tcGxldGUAgWcFAIRzEwAwCQCDAQUAMApDABkfAIJpIQCCFgUAgVwGCgo&s=magazine&h=VAFSQ0cxEa7H2Pb_)
-
-#### Function: Select Detection Parameters
-- [Detection Parameters](#detection-parameters)
-
-#### Information Exchange: Detect Shorelines (Client)
-###### Request
-- [Detection Parameters](#detection-parameters)
-
-###### Response
-- Acknowledgement
-
-#### Function: Inspect Acknowledgement
-The acknowledgement will contain either an error message or a job ID that can be used to monitor status.
-
-#### Information Exchange: Detect Shorelines (Piazza)
-###### Request (POST)
-- [Detection Parameters](#detection-parameters)
-
-###### Response
-Note: the connection stays open until the operation completes.
-- An appropriate error -OR-
-- Process outputs
-  - Location of detected shorelines
-  
-#### Function: Prepare Input
-* Validate input
-* Get scene metadata from image catalog repository
-(we do not want the client to pass all metadata to the server 
-because we do not want to deal with the risk
-of it being incomplete or out of date.
-Instead, we pull the metadata directly from the image catalog.)
-* Determine where the output will be stored
-
-#### Information Exchange: Query for Detected Shorelines
-###### Request
-- File identifier
-
-###### Response
-- Presence of previous detection
-
-#### Information Exchange: File Metadata Search
-###### Request
-- File identifier
-
-###### Response
-- File metadata (if any)
-
-#### Shoreline Detection Execution - [see below](#shoreline-detection-execution)
-
-#### Natural Color Image Creation - [see below](#natural-color-image-creation)
-
-#### Information Exchange: Update File Bucket Metadata
-###### Request
-- [File Bucket Metadata](#file-bucket-metadata)
-
-###### Response N/A
-
-#### Function: Update Status
-
-#### Information Exchange: Get Status 
-###### Request
-- Job ID
-
-###### Response
-- Job Status
-- If Complete
-  - Location of detected shorelines
-
-### Detection Execution
+### Shoreline Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgU2hvcmVsaW5lIERldGVjdGlvbiBFeGVjdXRpb24KCnBhcnRpY2lwYW50IFBpYXp6YQAGDXB6c3ZjLWJmIGFzAAYGACQNSW1hZ2UgQXJjaGl2ZSBhcyBpYQphdXRvbnVtYmVyIDEKCgBNBi0-AEMFOgB8BwCBCgpzCgBbBgAYCFZhbGlkYXRlIElucHV0CmFsdCB2YWxpZCBpAAsFACYHaWE6IEdlAHgHCmkAVQoACwYARQ4AgWYGZSBBbGdvcml0aG0AawgAgWgGOiBDYW5kAG8GAIEMC2Vsc2UgaW4AahMALwhFcnJvciBtZXNzYWdlCmVuZAo&s=magazine&h=sSp3fkDEI6V1MvLT)
+[original file](https://www.websequencediagrams.com/#open=133238)
+
+### Participants
+#### Client
+This is generally a web client (e.g., bf-ui) although in theory it can be a CLI.
+
+#### Broker
+Originally this was bf-handle. It is being migrated to bf-api.
+It must know how to compose commands for detection operations.
+
+#### Piazza
+In the context of this operation, 
+Piazza supports workflow management and provides file storage.
+
+#### pzsvc-exec
+This forms a REST-API and wrapper around a CLI-based detection algorithm.
+If a Detection Algorithm is deployable as its own REST API, 
+then it can be registered and accessed directly 
+but the Broker still must be aware of its interface.
+
+#### Detection Algorithm
+This performs the actual shoreline detection.
+The Broker must be aware of the interface used by the detection algorithm 
+so that it can compose an appropriate command based on the inputs.
 
 #### Information Exchange: Detect Shorelines
-###### Request
-- [Detection Parameters](#detection-parameters)
+###### Request (Async)
+- JWT
+  - [Detection Inputs](#detection-inputs)
+  - security assertion
+  - Piazza security token
+  - Image Provider security token (if needed)
 
 ###### Response
-Note: the connection stays open until the operation completes.
+- An appropriate error -OR-
+- File Identifier for Detected Shorelines
+
+###### Security
+This information exchange requires authentication and authorization with Beachfront. 
+Therefore the request must contain a security assertion 
+that is validated before the operation proceeds.
+
+#### Function: Prepare Executable Call
+- Build executable command
+- Acquire single-use token that will be used by pzsvc-exec
+
+#### Information Exchange: Execute
+###### Request (Broker) (Async)
+- JWT
+  - [Detection Inputs](#detection-inputs)
+  - User ID
+  - Single-use token
+  - Piazza security token
+  - Image Provider security token (if needed)
+
+###### Response
 - An appropriate error -OR-
 - Process outputs
-  - Location of Detected Shorelines
+  - File Identifier for Detected Shorelines
 
-#### Information Exchange: Get Images
-###### Request: band image URLs
-###### Response: image files (TIFF)
+###### Security
+The information exchange requires authentication and authorization with Piazza.
+Therefore the request must contain a Piazza security token 
+in addition to other security items that are required further down the line.
+
+#### Function: Manage Scaling
+- Piazza maintains an externally accessible status that it updates based on the behavior of the synchronous connection to pzsvc-exec, and serves the results that come back from the synchronous connection.
+- Piazza tracks the instances of pzsvc-exec and how many jobs they're serving, making sure that the jobs are being distributed correctly, and standing up or shutting down instances as necessary to handle the workload.
+
+#### Information Exchange: Execute
+###### Request (Piazza)
+- JWT
+  - [Detection Inputs](#detection-inputs)
+  - User ID
+  - Single-use token
+  - Piazza security token
+  - Image Provider security token (if needed)
+
+###### Response
+- An appropriate error -OR-
+- Process outputs
+  - File Identifier for Detected Shorelines
+
+###### Security
+This information exchange requires authentication and authorization with Beachfront. 
+Therefore the request must contain a single-use token that is validated before the operation starts and is consumed when the operation completes.
+
+#### Function: Validate Inputs
+- Validate input parameters
+- Validate single-use token
+
+#### Information Exchange: Get File [see below](#get-file)
 
 #### Information Exchange: Execute Algorithm
 ###### Request (EXECUTE)
-- [Detection Parameters](#detection-parameters)
+- [Detection Inputs](#detection-inputs)
 
 ###### Response
+- Error message -OR-
 - [Detected Shorelines](#detected-shorelines) (GeoJSON)
-The executable may output its response in the file provided
 
 #### Function: Algorithm Execution
 
-#### Function: Ingest Detected Shorelines - [see below](#ingest-file)
+#### Function: Inspect Results (pzsvc-exec)
+
+#### Information Exchange: Store Detected Shorelines [see below](#ingest-file)
+- [Detected Shorelines](#detected-shorelines) (GeoJSON)
+
+#### Function: Compose Response
+
+#### Function: Inspect Results (bf-handle)
+
+#### Information Exchange: Update File Metadata [see below](#update-file-metadata)
+
+#### Information Exchange: Metadata Injection [see below](#metadata-injection)
+
+#### Information Exchange: Deploy File [see below](#deploy-file)
 
 #### Function: Cleanup
 Cleanup activities like the following may be performed.
 - Delete input file
 - Delete output file
+- Consume single-use token
 
-### Natural Color Image Creation
-<img src="http://www.websequencediagrams.com/files/render?link=_VcVLUP4dl8MGi2T1zk6"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTmF0dXJhbCBDb2xvciBJbWFnZSBDcmVhdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudAAjB0FyY2hpdmUgYXMgaWEAEw1iZi1oYW5kbAAXBWNsaWVudAAzDVBpYXp6ACUOAHcGVG9vbABLBXQKCmFsdCBpAIEOBWFscmVhZHkgZXhpc3RzCiAATActPmlhOiBHZXQAgTQMCiAgaWEtPgBvBjoACw8AMAgAegY6IEluZ2VzAC8QAIEXBi0tPgAxFCBPYmplY3QgSUQKZWxzZQCBGgdtdXN0IGJlIGNyZWF0ZWQAgQ8TAIJWBkJhbmRzAIETDwCCcQUAgUkMAIEODwAsDgCBCxJCYW5kAIEMCgCCEwstPj5pdDogRXhlY3V0ZQCDThAgIGkAgX4LAIEREgCBfwcAPgUAgS4PdAAQBgCEJAUAUQcAQA8AgjkfADkFAII_FQCBEQUAglgibmQKAIM7EFNlcnYAgV0IaW4gR2VvAA0FcgoAgUEIABYTABQIAINgC01hcABGBWljZSBFbmRwb2ludAoK&s=magazine&h=kfp6SALOkj-8Uw--)
+### Get File
+<img src="http://www.websequencediagrams.com/files/render?link=jvzUD9TbAYdAbhNeckH7"/>[original file](https://www.websequencediagrams.com/#open=184563)
 
-#### Information Exchange: Get Color Image
-###### Request
-- Image URI
-
-###### Response
-- Color Image (TIFF) -or-
-- Not Found message
-
-#### Function: Ingest Color Image - [see below](#ingest-file)
-
-#### Information Exchange: Get Band Images
-###### Request (bf-handle)
-- Band Image URLs
-
-###### Response (Image Archive)
-- Band Images (TIFF)
-
-#### Function: Ingest Band Images - [see below](#ingest-file)
-
-#### Information Exchange: Execute Image Creation
-###### Request
-- Image Band Object IDs
+#### Information Exchange: Get File (from Piazza)
+###### Request: GET /file/{dataId}
+- Piazza credentials
+- File ID
 
 ###### Response
-- Color Image Object ID
+- File
 
-#### Information Exchange: Get Band Images
-###### Request (pzsvc-exec)
-- Band Image Object IDs
+###### Security
+The request requires authentication and authorization with Piazza
 
-###### Response (Piazza)
-- Band Images (TIFF)
+#### Function: Retrieve file from storage (Piazza)
+Out of scope
 
-#### Function: Create Color Image
-- Band merging
-- Color correction
-
-#### Information Exchange: Serve Image in Map Server
-###### Request
-- Color Image Object ID
+#### Information Exchange: Get File (Trusted or Untrusted File Service)
+###### Request (Client or Ingester)
+- Vendor-specific credentials
+- URL
+   - File ID
 
 ###### Response
-- Map Service Endpoint
+- File
 
-#### Function: Serve Image (out of scope)
+###### Security
+In most cases the request requires authentication and authorization 
+with the file provider (e.g., Planet Labs)
+
+#### Function: Retrieve file from storage (File Service)
+Out of scope
+
+#### Information Exchange: Get File (Untrusted Service via Ingester)
+###### Request (Async)
+- Vendor-specific credentials
+- File ID
+
+###### Response
+- File
+
+###### Security
+In most cases the request requires authentication and authorization 
+with the file provider. It may separately require A/A with the ingester
+(AKA dirty bucket/clean bucket).
+
+#### Function: Sanitize File
+Out of scope
 
 ### Ingest File
-<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
+<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/#open=141890)
 
 #### Information Exchange: Ingest File 
 ###### Request
 * File (POST) -OR-
 * File URL
+* Piazza credentials
 
-###### Response
-- Acknowledgement
+###### Response (Async)
+- Job Status
+- If Complete
+  - Location of Ingested File
 
-#### Function: Inspect Acknowledgement
-The acknowledgement will provide either an error message or a job ID that can be used to monitor status.
+###### Security
+The request requires authentication and authorization 
+with the owner of the file bucket (e.g., Piazza).
 
 #### Information Exchange: Store File 
 ###### Request
@@ -322,63 +443,78 @@ The acknowledgement will provide either an error message or a job ID that can be
 
 ###### Response N/A
 
-#### Function: Update Status
+### Update File Metadata
+<img src="http://www.websequencediagrams.com/files/render?link=o6iD927xwL_FMR3vboSo"/>[original file](https://www.websequencediagrams.com/#open=184556)
 
-#### Information Exchange: Get Status 
+#### Information Exchange: Update Metadata
 ###### Request
-- Job ID
+* File (PUT)
+* Security token
 
-###### Response
-- Job Status
-- If Complete
-  - Location of Ingested File
+###### Response N/A
+
+###### Security
+The request requires authentication and authorization 
+with the owner of the file bucket (e.g., Piazza).
 
 ### Metadata Injection
-<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTWV0YWRhdGEgSW5qZWN0aW9uCgpwYXJ0aWNpcGFudCBiZi1oYW5kbGUgYXMgYnJva2VyABMNUGlhenphIGFzIHAABQUAMA1GaWxlIEJ1Y2tldCBhcyBmYgBODVRpZGUgUHJlZGkAcwUgU2VydmljAGQFdHBzCgphdXRvbnVtYmVyIDEKCgB2Bi0-AGEGOiBHZXQgRGV0ZWN0ZWQgU2hvcmVsaW5lcwoAgQEGLT5mYgAeBkZpbGUKZmIALwoADAUAHggAgUwGOgA1FWxvb3AgZm9yIGVhY2ggZmVhdHVyZQogAIF_BwAyCkNvbGxlY3QgQ2VudHJvaWQKZW5kAIEmCnRwcwCBJwZUaWRlcwp0cHMAbAoADQYAgVIJAIEFCFVwZGF0AIMRCgoKcmVmIG92ZXIAgnoHLACCZAcgIEluZ2VzdAAqB2QAgWYGICBTZWU6ABMIAAwHAIM8C2N0cyBhcyBDbGllbnQKZW5kIHJlZgoK&s=magazine&h=36UnIYFR8zbULJGC)
+<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/>[original file](https://www.websequencediagrams.com/#open=177674)
 
-#### Information Exchange: Get Detected Shorelines
-###### Request
-- File Request (File ID)
-- File Metadata Request (File ID)
-
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
-
-#### Information Exchange: Get File
-###### Request (out of scope)
-###### Response
-- [Detected Shorelines](#detected-shorelines) (GeoJSON)
-- [File Bucket Metadata](#file-bucket-metadata)
+#### Information Exchange: Get File [see above](#get-file)
+The file is the [Detected Shorelines](#detected-shorelines) GeoJSON.
 
 #### Function: Collect Centroid
-We need a point to run tide prediction on for each detected shoreline feature.
-While some of the features may be rather large, 
-there still should not be a significant amount of tide variation.
+We need to pick a single point for each scene. 
+Large scenes will have lower tide accuracy as you move away from the centroid.
 
-#### Information Exchange: Get Tides
+#### Information Exchange: Get Tide
 ###### Request
-- Points (lon, lat)
+- Date/time (YYYY-MM-DD-hh-mm)
+- lat
+- lon
 
 ###### Response
-- Tides
-  - Point (lon, lat)
-  - 24h Max tide
-  - 24h Min tide
-  - actual tide
+- Date/time
+- lat
+- lon
+- results
+  - 24h Max
+  - 24h Min
+  - Tide amount
+
+###### Security
+The request may require authentication and authorization 
+with the owner of the tide prediction service.
 
 #### Function: Update Metadata
-Incorporate all available metadata into the shorelines file
+Each feature has its metadata updated based on tide information
+and whatever else is already on hand.
 
-#### Function: Ingest Updated Shorelines ([see below](#ingest-file)
+#### Information Exchange: Ingest File [see above](#ingest-file)
+Re-ingest the file and get a new file ID.
+
+### Display Detected Shorelines
+<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/#open=143835)
+
+#### Information Exchange: Get Map
+###### Request
+- GetMap request
+
+###### Response
+- Map image
+
+#### Function: Display Map
+
+#### Information Exchange: Get File [see above](#get-file)
+The requested file is the Detected Shorelines
+
+#### Function: Review Detected Shorelines [see below](#review-detected-shorelines)
 
 ### Detection Review
 <img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgUmV2aWV3IERldGVjdGlvbgoKYXV0b251bWJlciAxCgpwYXJ0aWNpcGFudCBBbmFseXN0AAcNUGlhenphABoNRmVhdHVyZSBSZXBvc2l0b3J5IGFzIGZyAD8NYmYtYW5hbHl6ZQoKbm90ZSBvdmVyAFoILCBmciwAGAs6CiAgUHJlY29uZGl0aW9uczogQ2xvdWQgZGVwbG95bWVudCwgU2VydmljZSByZWdpc3RyYXRpb24sIGYAgQYHaG9zdGluZwplbmQgbm90ZQoKAIFHBy0-AIE9BjoAgXkSAIFWBi0tPj4AgXMHOiBBY2tub3dsZWRnZW1lbnQAGwgAOwlQcmVwYQCBdwV2aWV3ABYJZnI6IEdldCBCYXNlbGluZQCCHAhzCmZyAHcKAAwSAFcIAIIACwCDAAZ6ZSBMaW5lU3RyaW5ncwoAgkQKAB4OUGVyZm9ybSAAgmYFc2kAGw4AgXAIAINRBmlzIFJlc3VsdABsCmZyOiBTdG9yAIEkC2xvb3AgcmVjdXJyaW5nCiAAhAwIAII8CkdldCBTdGF0dXMKICBhbHQgT3BlAIMHBiBpbmNvbXBsZXRlCiAgIACENActAIJTCgAuCWVsc2UALQsAGB5Mb2MAWQZvZiBcbgCBPBEgIGVuZAplbmQK&s=magazine&h=bv3g9EzcODmTzsBD)
+[original file](https://www.websequencediagrams.com/#open=140039)
 
 *Note: This has not been implemented yet.*
-
-#### Double-check - how are we decorating the output?
 
 #### Information Exchange: Review Detection
 ###### Request
@@ -391,70 +527,27 @@ Incorporate all available metadata into the shorelines file
   - Call bf-analyze with detected shorelines, detected shorelines
 
 ###### Response
-- Acknowledgement
+- Job Status
+- If complete
+  - [Detection Analysis Results](#detection-analysis-results)
 
 #### Information Exchange: Get Baseline Features
 ###### Request
-- Get Feature Request
-  - Bounding box of detected shorelines
+- Get Feature request
+  - Feature type
+  - Bounding box
 
 ###### Response
-- Baseline shorelines (GeoJSON)
-
-#### Function: Provision Files
-1. Store baseline shorelines in key/value store
-1. Provision input files from key/value store
-  - detected shorelines
-  - baseline shorelines
-
-#### Information Exchange: Analyze LineStrings
-###### Request
-- Detected shorelines
-- Baseline shorelines
-
-###### Response
-[Detection Analysis Results](#detection-analysis-results)
+- Features (GeoJSON)
 
 #### Function: Perform Analysis
 1. Qualitative analysis
 1. Quantitative analysis
 1. Write output file
 
-#### Function: Store Analysis Results
-
-#### Information Exchange: Get Status 
+#### Information Exchange: Publish Analysis Results
 ###### Request
-- Job ID
+- [Detection Analysis Results](#detection-analysis-results)
 
-###### Response
-- Job Status
-- If complete
-  - [Detection Analysis Results](#detection-analysis-results)
+###### Response - N/A
 
-### Display Detected Shorelines
-<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
-
-#### Information Exchange: Get Detected Shorelines
-###### Request (Analyst)
-- File identifier
-
-###### Response (Piazza)
-- [Detected shorelines](#detected-shorelines)
-
-#### Information Exchange: File Request
-###### Request (Piazza)
-- File identifier
-
-###### Response (File Bucket)
-- [Detected shorelines](#detected-shorelines)
-
-#### Information Exchange: Map Request
-###### Request (Analyst)
-- WMS or WMTS request for map layer image
-
-###### Response (Map Server)
-- Map layer images (JPG most likely)
-
-#### Function: Display Map
-- Detected Shorelines
-- Map layer image (as JPG)

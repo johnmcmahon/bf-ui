@@ -37,14 +37,14 @@ These activities are out of scope for this use case, but required for it to be s
 - [x] bf-handle
 - [x] pzsvc-exec
 - [x] Detection algorithm
+- [x] tide service
 
 ###### Service Registration
 The following services are registered into ~~Piazza~~ the environment so that bf-ui can find them:
 - [x] bf-handle
 - [x] pzsvc-exec / pzsvc-ossim (the detection algorithm)
-- [x] tide service
 
-#### Information Exchange: Discover Services
+#### Information Exchange: Discover Algorithms
 ###### Request - GET /service
 
 ###### Response
@@ -52,6 +52,10 @@ The following services are registered into ~~Piazza~~ the environment so that bf
 
 ###### Security
 The request requires authentication and authorization with Piazza.
+
+#### Function: Authentication
+The user is presented with an authentication challenge. 
+The user provides credentials via OAUTH2 which are verified by an IdAM component.
 
 #### Function: Get Available Services
 [Registered Services](#registered-services) are loaded from the environment
@@ -64,13 +68,16 @@ The request requires authentication and authorization with Piazza.
 #### Display Detected Shorelines - [see below](#display-detected-shorelines)
 
 ### Asynchronous Action (pattern)
-<img src="http://www.websequencediagrams.com/files/render?link=PSQ3ecG5LfFwcsvn3YM5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgQXN5bmNocm9ub3VzIEFjdGlvbgoKcGFydGljaXBhbnQgY2xpZW50AAYNc2VydmVyCmF1dG9udW1iZXIgMQoKACIGLT4AFwY6IHJlcXVlc3QKACcGAA4Kb3BlcmEAYgUAEggAXAY6IGtleQpsb29wIHVudGlsIGNvbXBsZXRlCiAAfQcAUgpzdGF0dXMAWgkgAIELBy0tPgBECQAdBgAxCwBeCGluc3BlY3QgcmVzcG9uc2UKZW5kAIEsEWdlABwFdWx0cwCBFhEAEAgK&s=magazine&h=loiifpmuxlmQ9EDk)
+<img src="http://www.websequencediagrams.com/files/render?link=PSQ3ecG5LfFwcsvn3YM5"/> [original file](https://www.websequencediagrams.com/#open=184352)
 
 This pattern is used throughout and is indicated by a bar around the swim lane.
 
 #### Information Exchange: Request
 ###### Request
-- variable
+In most cases these asynchronous requests require authentication and authorization. Therefore the requests will be wrapped in a JWT that contains the security assertion for that user.
+- JSON Web Token (JWT) 
+   - Security Assertion
+   - variable
 
 ###### Response
 - Job ID
@@ -89,13 +96,21 @@ Authentication is through an externally controlled system.
 
 #### Information Exchange: Authorize
 Authorization is through an internally controlled system 
-that manages users and roles
+that manages users and roles.
 ###### Request
 - authorization token
 - role
 
 ###### Response
 - confirmation
+
+#### Information Exchange: Log
+###### Request
+- User ID
+- Operation
+- Operation status
+
+###### Response: N/A
 
 #### Information Exchange: Get Status
 ###### Request
@@ -113,7 +128,7 @@ that manages users and roles
 
 ### Shoreline Detection Execution
 <img src="http://www.websequencediagrams.com/files/render?link=Klw1cF-FDHcXUVajNkBK"/>
-[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGV0ZWN0IFNob3JlbGluZSAxCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IGJmLXVpIGFzIGNsaWVudAAPDVBpYXp6YSBhcyBwAAUFCgpOb3RlIG92ZXIAKAc6IAogIFByZWNvbmRpdGlvbnM6IENsb3VkIGRlcGxveW1lbnQsIAogIHNlcnZpY2UgcmVnaXN0cmF0aW9uLAogIGltYWdlIGF2YWlsYWJpbGl0eQplbmQgbm90ZQoKAIENBi0-AHgGOiBEaXNjAHgFUwBIBnMKAIESBi0tPj4AgQgIQQBFBmxlABsKAD8JAIEsCFNlbGVjdCBpbnB1dCBwYXJhbWV0ZXJzCgpyZWYAgVIMCiAgU2VlOgCCQAsAglYGaW9uIEV4ZWN1dGlvbgogIEFuYWx5c3QgYWN0cyBhcyBDAIJFBmVuZCByZWYAbhFJbnNwZWN0IFJlc3VsdHMKYWx0AIMuB2VkAIMtCnMKICAAfhIAgQsHRGlzcGxheQAgFwBxCGVsc2UgRXJyb3IKIACDWQcAgXsKADsIZXJyb3IgbWVzc2FnZQplbmQK&s=magazine&h=P8v6Uw8Ug52ekXmE)
+[original file](https://www.websequencediagrams.com/#open=133238)
 
 #### Information Exchange: Detect Shorelines
 ###### Request (Async)
@@ -176,7 +191,7 @@ Cleanup activities like the following may be performed.
 - Delete output file
 
 ### Get File
-<img src="http://www.websequencediagrams.com/files/render?link=jvzUD9TbAYdAbhNeckH7"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgR2V0IEZpbGUKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANSW5nZXN0ZXIgYXMgaQAFBwAxDUZpbGUgU2VydmljZSBhcyBmcwBQDVBpYXp6YSBhcyBwAAUFCgpvcHQgaW1hZ2Ugc3RvcmVkIGluAB8HCiAAewctPgAnBjoAgSgKIAA5By0-AIEfBjoAgUMGZWxzZSBmaWwAQQxpbnRlcm5hbCBzAIEQBgBMC2ZzAEYNZnMALCNleAA2GSsAggoIAIEcDQCCHwgAZQpmAGUKACgKAB0RAEMKU2FuaXRpemUAQBItAIFwDm5kCgo&s=magazine&h=ULJTScp0KAnA_yeC)
+<img src="http://www.websequencediagrams.com/files/render?link=jvzUD9TbAYdAbhNeckH7"/>[original file](https://www.websequencediagrams.com/#open=184563)
 
 #### Information Exchange: Get File (from Piazza)
 ###### Request: GET /file/{dataId}
@@ -225,7 +240,7 @@ with the file provider. It may separately require A/A with the ingester
 out of scope
 
 ### Ingest File
-<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgSW5nZXN0IEZpbGUKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YQAlDUZpbGUgQnVja2UAMQVmYgoKADMHLT4AKQY6AGINAD0GLS0-PgBaBzogQWNrbm93bGVkZ2VtZW50ABsIPmZiOlN0b3JlAIEhBwAPCABOCFVwZGF0ZSBTdGF0dXMKCmxvb3AgUmVjdXJyaW5nCiAAgTkIAH0KR2V0ACYIICBhbHQgT3BlcmF0aW9uIEluY29tcGxldGUKICAgAIFhBy0AgRkKAC4JZWxzZQAtC0MAGR1Mb2MAWQZvZgCCbAdlZACCbwYgIGVuZAplbmQK&s=magazine&h=bAyVF-Q3ejWfLb46)
+<img src="http://www.websequencediagrams.com/files/render?link=CN9dbaVTIhMTLUbLOjr5"/> [original file](https://www.websequencediagrams.com/#open=141890)
 
 #### Information Exchange: Ingest File 
 ###### Request
@@ -250,11 +265,12 @@ with the owner of the file bucket (e.g., Piazza).
 ###### Response N/A
 
 ### Update File Metadata
-<img src="http://www.websequencediagrams.com/files/render?link=o6iD927xwL_FMR3vboSo"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgVXBkYXRlIEZpbGUgTWV0YWRhdGEKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANUGlhenphIGFzIHAABQUALQ0AUAVCdWNrZQA6BWZiCgoAPQYtPisAKQY6AGoWAEYGLT5mYjoAgRkHAAsQLT4-LQCBCQYAOgkAgTYIIHJlc3VsdHMKCg&s=magazine&h=4NI09Ift5nkg6teC)
+<img src="http://www.websequencediagrams.com/files/render?link=o6iD927xwL_FMR3vboSo"/>[original file](https://www.websequencediagrams.com/#open=184556)
 
 #### Information Exchange: Update Metadata
 ###### Request
 * File (PUT)
+* Security token
 
 ###### Response N/A
 
@@ -263,7 +279,7 @@ The request requires authentication and authorization
 with the owner of the file bucket (e.g., Piazza).
 
 ### Metadata Injection
-<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgTWV0YWRhdGEgSW5qZWN0aW9uCgpwYXJ0aWNpcGFudCBiZi1oYW5kbGUgYXMgYnJva2VyABMNUGlhenphIGFzIHAABQUAMA1GaWxlIEJ1Y2tldCBhcyBmYgBODVRpZGUgUHJlZGkAcwUgU2VydmljAGQFdHBzCgphdXRvbnVtYmVyIDEKCgB2Bi0-AGEGOiBHZXQgRGV0ZWN0ZWQgU2hvcmVsaW5lcwoAgQEGLT5mYgAeBkZpbGUKZmIALwoADAUAHggAgUwGOgA1FWxvb3AgZm9yIGVhY2ggZmVhdHVyZQogAIF_BwAyCkNvbGxlY3QgQ2VudHJvaWQKZW5kAIEmCnRwcwCBJwZUaWRlcwp0cHMAbAoADQYAgVIJAIEFCFVwZGF0AIMRCgoKcmVmIG92ZXIAgnoHLACCZAcgIEluZ2VzdAAqB2QAgWYGICBTZWU6ABMIAAwHAIM8C2N0cyBhcyBDbGllbnQKZW5kIHJlZgoK&s=magazine&h=36UnIYFR8zbULJGC)
+<img src="http://www.websequencediagrams.com/files/render?link=c0gl1Avulh5x2w7lGxlk"/>[original file](https://www.websequencediagrams.com/#open=177674)
 
 #### Information Exchange: Get File [see above](#get-file)
 The file is the [Detected Shorelines](#detected-shorelines) GeoJSON.
@@ -299,7 +315,7 @@ and whatever else is already on hand.
 Re-ingest the file and get a new file ID.
 
 ### Deploy File
-<img src="http://www.websequencediagrams.com/files/render?link=zcB_Y1rADqVSojC3DmXB"/>[original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGVwbG95IEZpbGUKCnBhcnRpY2lwYW50IENsaWVudCBhcyBjAAUFABANUGlhenphIGFzIHAABQUALQ1XZWIgRmVhdHVyZSBTZXJ2ZXIgYXMgd2ZzCgoARQYtPisAMQY6AHINAEUGLT53ZnMABBUtPj4tAIEGBjoAgSsFAIE1B21lbnQgcmVzdWx0cwoK&s=magazine&h=iF7Iatn5TDSdzjso)
+<img src="http://www.websequencediagrams.com/files/render?link=zcB_Y1rADqVSojC3DmXB"/>[original file](https://www.websequencediagrams.com/#open=184557)
 
 #### Information Exchange: Deploy File
 ###### Request
@@ -317,7 +333,7 @@ with the owner of the WFS (e.g., Piazza).
 out of scope
 
 ### Display Detected Shorelines
-<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/?lz=dGl0bGUgRGlzcGxheSBEZXRlY3RlZCBTaG9yZWxpbmVzCgphdXRvbnVtYmVyIDEKCnBhcnRpY2lwYW50IEFuYWx5c3QgYXMgYQAFBgASDVBpYXp6YSBhcyBwAAUFAC8NRmlsZSBCdWNrZQA7BWZiCgoAPQctPgApBjogR2V0AH4VAEkGLT5mYjoAQgZSZXF1ZXN0CmZiADMKRmlsZQAhCQCBGAc6AIFLFwBxCAAdCgCCCgdkAIIJCHMAggcK&s=magazine&h=-9OKu9B8mqkPXjb2)
+<img src="http://www.websequencediagrams.com/files/render?link=cz5Ci8sds4AnusoP-vna"/> [original file](https://www.websequencediagrams.com/#open=143835)
 
 #### Information Exchange: Get Map
 ###### Request
@@ -330,3 +346,48 @@ out of scope
 
 #### Information Exchange: Get File [see above](#get-file)
 The requested file is the Detected Shorelines
+
+#### Function: Review Detected Shorelines [see below](#review-detection)
+
+### Detection Review
+<img src="http://www.websequencediagrams.com/files/render?link=6JY0mf7cgq0XMgi0m96i"/>
+[original file](https://www.websequencediagrams.com/#open=140039)
+
+*Note: This has not been implemented yet.*
+
+#### Information Exchange: Review Detection
+###### Request
+- Detection Review Parameters
+  - Location of detected shorelines
+  - Bounding box of detected shorelines
+- Continuation Options
+  - Select baseline shorelines from feature repository
+  - Store baseline shorelines in key/value store
+  - Call bf-analyze with detected shorelines, detected shorelines
+
+###### Response
+- Job Status
+- If complete
+  - [Detection Analysis Results](#detection-analysis-results)
+
+#### Information Exchange: Get Baseline Features
+###### Request
+- Get Feature request
+  - Feature type
+  - Bounding box
+
+###### Response
+- Features (GeoJSON)
+
+#### Function: Perform Analysis
+1. Qualitative analysis
+1. Quantitative analysis
+1. Write output file
+
+#### Information Exchange: Publish Analysis Results
+###### Request
+- [Detection Analysis Results](#detection-analysis-results)
+
+###### Response - N/A
+
+
