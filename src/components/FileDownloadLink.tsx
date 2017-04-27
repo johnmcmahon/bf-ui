@@ -17,6 +17,10 @@
 import * as React from 'react'
 import axios, {AxiosResponse} from 'axios'
 import {getClient} from '../api/session'
+import {
+  DOWNLOAD_GEOJSON,
+  DOWNLOAD_LANDSAT,
+} from '../constants'
 
 const MB = 1024000
 const TIMEOUT = 600000
@@ -25,6 +29,8 @@ interface Props {
   className?:   string
   filename:     string
   jobId:        string
+  type:         string
+  url:          string
   onComplete()
   onError(err: any)
   onProgress(loaded: number, total: number)
@@ -71,18 +77,32 @@ export class FileDownloadLink extends React.Component<Props, State> {
     const {isDownloading} = this.state
     const totalMegabytes = Math.round((this.state.total / MB) * 10) / 10
     const percentage = (Math.floor((this.state.loaded / this.state.total) * 100) || 0) + '%'
-    return (
-      <a
-        ref="hyperlink"
-        href={this.state.blobUrl}
-        download={this.props.filename}
-        className={this.props.className}
-        title={isDownloading ? `Retrieving ${totalMegabytes} MB of GeoJSON...` : 'Download'}
-        onClick={this.handleClick}
-      >
-        {this.state.isDownloading ? percentage : <i className="fa fa-cloud-download"/>}
-      </a>
-    )
+    // For landsat do a simple redirect
+    if (this.props.type === DOWNLOAD_LANDSAT) {
+      return (
+        <a
+          ref="hyperlink"
+          href={this.props.url}
+          className={this.props.className}
+          title={`View Source`}
+        >
+          {this.state.isDownloading ? percentage : <i className="fa fa-cloud-download"/>}
+        </a>
+      )
+    } else {
+      return (
+        <a
+          ref="hyperlink"
+          href={this.state.blobUrl}
+          download={this.props.filename}
+          className={this.props.className}
+          title={isDownloading ? `Retrieving ${totalMegabytes} MB of ${this.props.type}...` : `Download ${this.props.type}`}
+          onClick={this.handleClick}
+        >
+          {this.state.isDownloading ? percentage : <i className="fa fa-cloud-download"/>}
+        </a>
+      )
+    }
   }
 
   private handleClick() {
@@ -96,7 +116,7 @@ export class FileDownloadLink extends React.Component<Props, State> {
     this.props.onStart()
 
     const client = getClient()
-    client.get(`/v0/job/${this.props.jobId}.geojson`, {
+    client.get(this.props.url, {
       cancelToken: new axios.CancelToken(cancel => this.cancel = cancel),
       onDownloadProgress: this.handleProgress,
       responseType: 'blob',
@@ -107,7 +127,8 @@ export class FileDownloadLink extends React.Component<Props, State> {
   }
 
   private handleComplete(response: AxiosResponse) {
-    const file = new File([response.data], this.props.filename, {type: 'application/json'})
+    const fileType = (this.props.type === DOWNLOAD_GEOJSON) ? 'application/json' : 'application/octet-stream'
+    const file = new File([response.data], this.props.filename, {type: fileType})
     this.setState({
       blobUrl: URL.createObjectURL(file),
       isDownloading: false,

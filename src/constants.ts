@@ -31,3 +31,8 @@ export const SOURCE_LANDSAT = 'landsat'
 export const TYPE_JOB = 'JOB'
 export const TYPE_PRODUCT_LINE = 'PRODUCT_LINE'
 export const TYPE_SCENE = 'SCENE'
+
+// Download Types
+export const DOWNLOAD_GEOJSON = 'GeoJSON'
+export const DOWNLOAD_LANDSAT = 'Landsat'
+export const DOWNLOAD_PLANET = 'Raster'

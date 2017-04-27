@@ -27,6 +27,8 @@ import {
   STATUS_RUNNING,
   STATUS_ERROR,
   STATUS_TIMED_OUT,
+  DOWNLOAD_GEOJSON,
+  DOWNLOAD_LANDSAT,
 } from '../constants'
 
 interface Props {
@@ -38,8 +40,10 @@ interface Props {
 }
 
 interface State {
-  downloadProgress?: number,
-  isDownloading?: boolean
+  downloadJsonProgress?: number,
+  isDownloadingJson?: boolean
+  downloadRasterProgress?: number,
+  isDownloadingRaster?: boolean
   isExpanded?: boolean
   isRemoving?: boolean
 }
@@ -48,23 +52,29 @@ export class JobStatus extends React.Component<Props, State> {
   constructor() {
     super()
     this.state = {
-      downloadProgress: 0,
-      isDownloading: false,
+      downloadJsonProgress: 0,
+      isDownloadingJson: false,
+      downloadRasterProgress: 0,
+      isDownloadingRaster: false,
       isExpanded: false,
       isRemoving: false,
     }
     this.emitOnForgetJob        = this.emitOnForgetJob.bind(this)
-    this.handleDownloadComplete = this.handleDownloadComplete.bind(this)
-    this.handleDownloadError    = this.handleDownloadError.bind(this)
-    this.handleDownloadProgress = this.handleDownloadProgress.bind(this)
-    this.handleDownloadStart    = this.handleDownloadStart.bind(this)
+    this.handleDownloadJsonComplete = this.handleDownloadJsonComplete.bind(this)
+    this.handleDownloadJsonError    = this.handleDownloadJsonError.bind(this)
+    this.handleDownloadJsonProgress = this.handleDownloadJsonProgress.bind(this)
+    this.handleDownloadJsonStart    = this.handleDownloadJsonStart.bind(this)
+    this.handleDownloadRasterComplete = this.handleDownloadRasterComplete.bind(this)
+    this.handleDownloadRasterError    = this.handleDownloadRasterError.bind(this)
+    this.handleDownloadRasterProgress = this.handleDownloadRasterProgress.bind(this)
+    this.handleDownloadRasterStart    = this.handleDownloadRasterStart.bind(this)
     this.handleExpansionToggle  = this.handleExpansionToggle.bind(this)
     this.handleForgetToggle     = this.handleForgetToggle.bind(this)
   }
 
   render() {
     const {id, properties} = this.props.job
-    const downloadPercentage = `${this.state.downloadProgress || 0}%`
+    const downloadPercentage = `${this.state.downloadJsonProgress || 0}%`
     return (
       <li className={`${styles.root} ${this.aggregatedClassNames}`}>
         <div className={styles.details} onClick={this.handleExpansionToggle}>
@@ -124,10 +134,25 @@ export class JobStatus extends React.Component<Props, State> {
               jobId={id}
               filename={properties.name + '.geojson'}
               className={styles.download}
-              onProgress={this.handleDownloadProgress}
-              onStart={this.handleDownloadStart}
-              onComplete={this.handleDownloadComplete}
-              onError={this.handleDownloadError}
+              type={DOWNLOAD_GEOJSON}
+              url={`/v0/job/${id}.geojson`}
+              onProgress={this.handleDownloadJsonProgress}
+              onStart={this.handleDownloadJsonStart}
+              onComplete={this.handleDownloadJsonComplete}
+              onError={this.handleDownloadJsonError}
+            />
+          )}
+          {properties.status === STATUS_SUCCESS && (
+            <FileDownloadLink
+              jobId={id}
+              filename={properties.name}
+              className={styles.download}
+              type={DOWNLOAD_LANDSAT}
+              url="http://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/index.html"
+              onProgress={this.handleDownloadRasterProgress}
+              onStart={this.handleDownloadRasterStart}
+              onComplete={this.handleDownloadRasterComplete}
+              onError={this.handleDownloadRasterError}
             />
           )}
         </div>
@@ -142,9 +167,11 @@ export class JobStatus extends React.Component<Props, State> {
   private get aggregatedClassNames() {
     return [
       this.classForActive,
-      this.classForDownloading,
+      this.classForDownloadingJson,
+      this.classForDownloadingRaster,
       this.classForExpansion,
-      this.classForLoading,
+      this.classForLoadingJson,
+      this.classForLoadingRaster,
       this.classForRemoving,
       this._classForStatus,
     ].filter(Boolean).join(' ')
@@ -154,16 +181,24 @@ export class JobStatus extends React.Component<Props, State> {
     return this.props.isActive ? styles.isActive : ''
   }
 
-  private get classForDownloading() {
-    return this.state.isDownloading ? styles.isDownloading : ''
+  private get classForDownloadingJson() {
+    return this.state.isDownloadingJson ? styles.isDownloading : ''
+  }
+
+  private get classForDownloadingRaster() {
+    return this.state.isDownloadingRaster ? styles.isDownloading : ''
   }
 
   private get classForExpansion() {
     return this.state.isExpanded ? styles.isExpanded : ''
   }
 
-  private get classForLoading() {
-    return (this.state.isDownloading) ? styles.isLoading : ''
+  private get classForLoadingJson() {
+    return (this.state.isDownloadingJson) ? styles.isLoading : ''
+  }
+
+  private get classForLoadingRaster() {
+    return (this.state.isDownloadingRaster) ? styles.isLoading : ''
   }
 
   private get classForRemoving() {
@@ -184,22 +219,41 @@ export class JobStatus extends React.Component<Props, State> {
     this.props.onForgetJob(this.props.job.id)
   }
 
-  private handleDownloadProgress(loadedBytes, totalBytes) {
+  private handleDownloadJsonProgress(loadedBytes, totalBytes) {
     this.setState({
-      downloadProgress: Math.floor((loadedBytes / totalBytes) * 100),
+      downloadJsonProgress: Math.floor((loadedBytes / totalBytes) * 100),
     })
   }
 
-  private handleDownloadStart() {
-    this.setState({ isDownloading: true })
+  private handleDownloadJsonStart() {
+    this.setState({ isDownloadingJson: true })
   }
 
-  private handleDownloadComplete() {
-    this.setState({ isDownloading: false })
+  private handleDownloadJsonComplete() {
+    this.setState({ isDownloadingJson: false })
   }
 
-  private handleDownloadError(err) {
-    this.setState({ isDownloading: false })
+  private handleDownloadJsonError(err) {
+    this.setState({ isDownloadingJson: false })
+    console.error('Download failed: ' + err.stack)
+  }
+
+  private handleDownloadRasterProgress(loadedBytes, totalBytes) {
+    this.setState({
+      downloadRasterProgress: Math.floor((loadedBytes / totalBytes) * 100),
+    })
+  }
+
+  private handleDownloadRasterStart() {
+    this.setState({ isDownloadingRaster: true })
+  }
+
+  private handleDownloadRasterComplete() {
+    this.setState({ isDownloadingRaster: false })
+  }
+
+  private handleDownloadRasterError(err) {
+    this.setState({ isDownloadingRaster: false })
     console.error('Download failed: ' + err.stack)
   }
 
