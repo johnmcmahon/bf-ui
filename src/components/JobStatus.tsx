@@ -75,10 +75,11 @@ export class JobStatus extends React.Component<Props, State> {
   render() {
     const {id, properties} = this.props.job
     const downloadPercentage = `${this.state.downloadJsonProgress || 0}%`
+    const sceneArray = properties.scene_id.split(':')
     const part1 = 'L8'
-    const part2 = properties.scene_id.substr(3, 3)
-    const part3 = properties.scene_id.substr(6, 3)
-    const landsatUrl = `http://landsat-pds.s3.amazonaws.com/${part1}/${part2}/${part3}/${properties.scene_id}/index.html`
+    const part2 = sceneArray[1].substr(3, 3)
+    const part3 = sceneArray[1].substr(6, 3)
+    const landsatUrl = `http://landsat-pds.s3.amazonaws.com/${part1}/${part2}/${part3}/${sceneArray[1]}/index.html`
     return (
       <li className={`${styles.root} ${this.aggregatedClassNames}`}>
         <div className={styles.details} onClick={this.handleExpansionToggle}>
