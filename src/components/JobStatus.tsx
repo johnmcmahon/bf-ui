@@ -75,6 +75,10 @@ export class JobStatus extends React.Component<Props, State> {
   render() {
     const {id, properties} = this.props.job
     const downloadPercentage = `${this.state.downloadJsonProgress || 0}%`
+    const part1 = 'L8'
+    const part2 = properties.scene_id.substr(3, 3)
+    const part3 = properties.scene_id.substr(6, 3)
+    const landsatUrl = `http://landsat-pds.s3.amazonaws.com/${part1}/${part2}/${part3}/${properties.scene_id}/index.html`
     return (
       <li className={`${styles.root} ${this.aggregatedClassNames}`}>
         <div className={styles.details} onClick={this.handleExpansionToggle}>
@@ -148,7 +152,7 @@ export class JobStatus extends React.Component<Props, State> {
               filename={properties.name}
               className={styles.download}
               type={DOWNLOAD_LANDSAT}
-              url="http://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/index.html"
+              url={landsatUrl}
               onProgress={this.handleDownloadRasterProgress}
               onStart={this.handleDownloadRasterStart}
               onComplete={this.handleDownloadRasterComplete}
