@@ -28,7 +28,7 @@ import {
   STATUS_ERROR,
   STATUS_TIMED_OUT,
   DOWNLOAD_GEOJSON,
-  DOWNLOAD_LANDSAT,
+  DOWNLOAD_LANDSAT, SOURCE_LANDSAT, DOWNLOAD_PLANET,
 } from '../constants'
 
 interface Props {
@@ -75,11 +75,19 @@ export class JobStatus extends React.Component<Props, State> {
   render() {
     const {id, properties} = this.props.job
     const downloadPercentage = `${this.state.downloadJsonProgress || 0}%`
-    const sceneArray = properties.scene_id.split(':')
-    const part1 = 'L8'
-    const part2 = sceneArray[1].substr(3, 3)
-    const part3 = sceneArray[1].substr(6, 3)
-    const landsatUrl = `http://landsat-pds.s3.amazonaws.com/${part1}/${part2}/${part3}/${sceneArray[1]}/index.html`
+    const sourceType = properties.scene_id.split(':')[0]
+    let downloadType = ''
+    let downloadUrl = ''
+    if (sourceType === SOURCE_LANDSAT) {
+      downloadType = DOWNLOAD_LANDSAT
+      const normalizedSceneId = normalizeSceneId(properties.scene_id)
+      const part1 = 'L8'
+      const part2 = normalizedSceneId.substr(3, 3)
+      const part3 = normalizedSceneId.substr(6, 3)
+      downloadUrl = `http://landsat-pds.s3.amazonaws.com/${part1}/${part2}/${part3}/${normalizedSceneId}/index.html`
+    } else {
+      downloadType = DOWNLOAD_PLANET
+    }
     return (
       <li className={`${styles.root} ${this.aggregatedClassNames}`}>
         <div className={styles.details} onClick={this.handleExpansionToggle}>
@@ -152,8 +160,8 @@ export class JobStatus extends React.Component<Props, State> {
               jobId={id}
               filename={properties.name}
               className={styles.download}
-              type={DOWNLOAD_LANDSAT}
-              url={landsatUrl}
+              type={downloadType}
+              url={downloadUrl}
               onProgress={this.handleDownloadRasterProgress}
               onStart={this.handleDownloadRasterStart}
               onComplete={this.handleDownloadRasterComplete}
