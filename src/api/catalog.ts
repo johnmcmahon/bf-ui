@@ -96,7 +96,7 @@ export function search({
 }
 
 
-export function searchViaBFAPI({
+export function search2({
   bbox,
   catalogApiKey,
   cloudCover,
@@ -106,6 +106,9 @@ export function searchViaBFAPI({
   startIndex,
   count,
 }): Promise<beachfront.ImageryCatalogPage> {
+
+  const session = getClient()
+  
   console.warn('(catalog:search): Discarding parameters `count` (%s) and `startIndex` (%s)', count, startIndex)
   let itemType
   switch (source) {
@@ -120,12 +123,12 @@ export function searchViaBFAPI({
     default:
       return Promise.reject(new Error(`Unknown data source prefix: '${source}'`))
   }
-  return _client.post(`/v0/imagery/discover/${itemType}`, {
-	  cloudCover:      cloudCover + .05,
-	  PL_API_KEY:      catalogApiKey,
-	  bbox:            bbox.join(','),
-	  acquiredDate:    new Date(dateFrom).toISOString(),
-	  maxAcquiredDate: new Date(dateTo).toISOString(),
+  return session.get(`/v0/imagery/discover/${itemType}`, {
+      cloudCover:      cloudCover + .05,
+      PL_API_KEY:      catalogApiKey,
+      bbox:            bbox.join(','),
+      acquiredDate:    new Date(dateFrom).toISOString(),
+      maxAcquiredDate: new Date(dateTo).toISOString(),
   })
     .then(response => response.data)
     // HACK HACK HACK HACK HACK HACK HACK HACK HACK HACK
