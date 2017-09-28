@@ -504,7 +504,7 @@ export class Application extends React.Component<Props, State> {
       isSearching: true,
       selectedFeature: null,
     })
-    catalogService.search({
+    catalogService.search2({
       count,
       startIndex,
       bbox: this.state.bbox,
