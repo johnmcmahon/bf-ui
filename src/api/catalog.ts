@@ -124,11 +124,13 @@ export function search2({
       return Promise.reject(new Error(`Unknown data source prefix: '${source}'`))
   }
   return session.get(`/v0/imagery/discover/${itemType}`, {
+  params: {
       cloudCover:      cloudCover + .05,
       PL_API_KEY:      catalogApiKey,
       bbox:            bbox.join(','),
       acquiredDate:    new Date(dateFrom).toISOString(),
       maxAcquiredDate: new Date(dateTo).toISOString(),
+    },  
   })
     .then(response => response.data)
     // HACK HACK HACK HACK HACK HACK HACK HACK HACK HACK
