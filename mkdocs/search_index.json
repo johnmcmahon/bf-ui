@@ -1,0 +1,34 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "Beachfront UI\n\n\nUser interface for the Beachfront project.\n\n\nInstalling and Developing\n\n\n$ npm install\n$ npm run typings:install\n$ npm run create-ssl-certs\n$ npm run watch\n\n\n\n\n\n\nNote:\n You may need to add \n.development_ssl_certificate.pem\n to your development machine's SSL trust chain to avoid problems with CORS being blocked by browser SSL security errors.\n\n\n\n\nOpen browser to \nhttp://localhost:8080\n.  Changes will automatically\nreload the browser.\n\n\nBuilding\n\n\nnpm run build\n\n\n\n\nEnvironment Variables\n\n\n\n\n\n\n\n\nVariable\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nAPI_ROOT\n\n\nA URL pointing at a \nbf-api\n instance.\n\n\n\n\n\n\nCLASSIFICATION_BANNER_BACKGROUND\n\n\nA color value (e.g., \nred\n, \ngreen\n, \nblue\n) for the classification banner background.\n\n\n\n\n\n\nCLASSIFICATION_BANNER_FOREGROUND\n\n\nA color value (e.g., \nred\n, \ngreen\n, \nblue\n) for the classification banner foreground.\n\n\n\n\n\n\nCLASSIFICATION_BANNER_TEXT\n\n\nA text value for the classification banner.\n\n\n\n\n\n\nCONSENT_BANNER_TEXT\n\n\nA text value for the consent message shown at the login prompt.\n\n\n\n\n\n\nUSER_GUIDE_URL\n\n\nA URL pointing to the Beachfront user guide.  The menu guide icon will only display if this is set.\n\n\n\n\n\n\n\n\nTesting\n\n\n$ npm run lint\n$ npm run test\n$ npm run test:ci  # Will also generate coverage reports",
+            "title": "Home"
+        },
+        {
+            "location": "/#beachfront-ui",
+            "text": "User interface for the Beachfront project.",
+            "title": "Beachfront UI"
+        },
+        {
+            "location": "/#installing-and-developing",
+            "text": "$ npm install\n$ npm run typings:install\n$ npm run create-ssl-certs\n$ npm run watch   Note:  You may need to add  .development_ssl_certificate.pem  to your development machine's SSL trust chain to avoid problems with CORS being blocked by browser SSL security errors.   Open browser to  http://localhost:8080 .  Changes will automatically\nreload the browser.",
+            "title": "Installing and Developing"
+        },
+        {
+            "location": "/#building",
+            "text": "npm run build",
+            "title": "Building"
+        },
+        {
+            "location": "/#environment-variables",
+            "text": "Variable  Description      API_ROOT  A URL pointing at a  bf-api  instance.    CLASSIFICATION_BANNER_BACKGROUND  A color value (e.g.,  red ,  green ,  blue ) for the classification banner background.    CLASSIFICATION_BANNER_FOREGROUND  A color value (e.g.,  red ,  green ,  blue ) for the classification banner foreground.    CLASSIFICATION_BANNER_TEXT  A text value for the classification banner.    CONSENT_BANNER_TEXT  A text value for the consent message shown at the login prompt.    USER_GUIDE_URL  A URL pointing to the Beachfront user guide.  The menu guide icon will only display if this is set.",
+            "title": "Environment Variables"
+        },
+        {
+            "location": "/#testing",
+            "text": "$ npm run lint\n$ npm run test\n$ npm run test:ci  # Will also generate coverage reports",
+            "title": "Testing"
+        }
+    ]
+}
