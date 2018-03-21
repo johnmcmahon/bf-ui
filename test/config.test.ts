@@ -14,10 +14,10 @@
  * limitations under the License.
  **/
 
-import {assert} from 'chai'
 import * as config from '../src/config'
+//import {test, expect} from 'jest'
 
-describe('config', () => {
+/*describe('config', () => {
   it('reads API root URL from environment', () => {
     assert.equal(config.API_ROOT, '/test-api-root')
   })
@@ -33,4 +33,18 @@ describe('config', () => {
   it('defines at least one tile provider', () => {
     assert.isAbove(config.BASEMAP_TILE_PROVIDERS.length, 0)
   })
+})*/
+test('reads API root URL from environment', () => {
+  expect(config.API_ROOT).toBe('https://bf-api.int.dev.east.paas.geointservices.io')
+})
+test('defines at least one basemap tile provider', () => {
+  expect(config.BASEMAP_TILE_PROVIDERS.length).toBeGreaterThan(0)
+})
+
+test('defines at least one scene preview tile provider', () => {
+  expect(config.SCENE_TILE_PROVIDERS.length).toBeGreaterThan(0)
+})
+
+test('defines at least one tile provider', () => {
+  expect(config.BASEMAP_TILE_PROVIDERS.length).toBeGreaterThan(0)
 })

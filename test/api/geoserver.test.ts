@@ -14,12 +14,30 @@
  * limitations under the License.
  **/
 
+/*
 import {assert} from 'chai'
 import * as sinon from 'sinon'
+*/
 import * as session from '../../src/api/session'
 import * as geoserver from '../../src/api/geoserver'
-import {AxiosPromise} from 'axios'
 
+jest.mock('../../src/api/session')
+
+test('returns WMS URL', () => {
+  session.mockGet({data: {geoserver: 'test-wms-url'}})
+  return geoserver.lookup().then(descriptor => {
+    expect(descriptor.wmsUrl).toBe('test-wms-url/wms')
+  })
+})
+
+test('returns WMS URL failure', () => {
+  session.mockGet({data: 'Failure!', status: 401})
+  return geoserver.lookup().catch(response => {
+    expect(response.response.status).toBe(401)
+  })
+})
+
+/*
 describe('GeoServer Service', () => {
   let client: FakeClient
 
@@ -68,22 +86,27 @@ describe('GeoServer Service', () => {
     })
   })
 })
+*/
 
 //
 // Helpers
 //
 
+/*
 interface FakeClient {
   get: Sinon.SinonStub
 }
+*/
 
 function resolve(data): AxiosPromise {
   return Promise.resolve({
     data,
   })
 }
+/*
 function reject(err, response = {}): Promise<void> {
   return Promise.reject(Object.assign(new Error(err), {
     response,
   }))
 }
+*/
