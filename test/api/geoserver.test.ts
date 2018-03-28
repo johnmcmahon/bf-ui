@@ -13,100 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-
-/*
-import {assert} from 'chai'
-import * as sinon from 'sinon'
-*/
+import {Sinon} from 'sinon'
 import * as session from '../../src/api/session'
 import * as geoserver from '../../src/api/geoserver'
 
-jest.mock('../../src/api/session')
+jest.unmock('../../src/api/session')
 
-test('returns WMS URL', () => {
-  session.mockGet({data: {geoserver: 'test-wms-url'}})
-  return geoserver.lookup().then(descriptor => {
-    expect(descriptor.wmsUrl).toBe('test-wms-url/wms')
-  })
-})
+interface FakeClient {
+  get: Sinon.SinonStub,
+  post: Sinon.SinonStub,
+  put: Sinon.SinonStub,
+  delete: Sinon.SinonStub,
+}
 
-test('returns WMS URL failure', () => {
-  session.mockGet({data: 'Failure!', status: 401})
-  return geoserver.lookup().catch(response => {
-    expect(response.response.status).toBe(401)
-  })
-})
-
-/*
 describe('GeoServer Service', () => {
   let client: FakeClient
 
   beforeEach(() => {
-    client = {
-      get: sinon.stub(),
-    }
-    sinon.stub(session, 'getClient').returns(client)
-    sinon.stub(console, 'debug')
-    sinon.stub(console, 'error')
+    client = session.getClient()
+    client.get = jest.fn()
   })
 
   afterEach(() => {
-    sinon.restore(session.getClient)
-    sinon.restore(console.debug)
-    sinon.restore(console.error)
+    // Don't do anything for now
   })
 
   describe('discover()', () => {
     it('returns WMS URL', () => {
-      client.get.returns(resolve({geoserver: 'test-wms-url'}))
+      client.get.mockReturnValue(resolve({geoserver: 'test-wms-url'}))
       return geoserver.lookup()
         .then(descriptor => {
-          assert.equal(descriptor.wmsUrl, 'test-wms-url/wms')
+          expect(descriptor.wmsUrl).toBe('test-wms-url/wms')
         })
     })
 
-    it('calls correct URL', () => {
-      client.get.returns(resolve({geoserver: 'test-wms-url'}))
+    it('fails to return wms url', () => {
+      client.get.mockRejectedValue(new Error('Failure'))
       return geoserver.lookup()
-        .then(() => {
-          assert.deepEqual(client.get.firstCall.args, ['/'])
+        .catch(error => {
+          expect(error.message).toBe('Failure')
         })
-    })
-
-    it('throws on HTTP error', () => {
-      client.get.returns(reject('test-error', {status: 500}))
-      return geoserver.lookup()
-        .then(
-          () => assert.fail('Should have rejected'),
-          (err) => {
-            assert.instanceOf(err, Error)
-            assert.match(err, /test-error/i)
-          },
-        )
     })
   })
-})
-*/
-
+  })
 //
 // Helpers
 //
 
-/*
-interface FakeClient {
-  get: Sinon.SinonStub
-}
-*/
-
-function resolve(data): AxiosPromise {
+function resolve(data) {
   return Promise.resolve({
     data,
   })
 }
-/*
+
 function reject(err, response = {}): Promise<void> {
   return Promise.reject(Object.assign(new Error(err), {
     response,
   }))
 }
-*/
+

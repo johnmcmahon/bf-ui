@@ -1,36 +1,22 @@
-let _spy = {}
+let _client
 
-export const getClient = jest.fn()
-
-export function createSpy(props) {
-  _spy = {
-    'get': jest.fn(),
-    'post': jest.fn(),
-    ...props,
+export function getClient() {
+  if (!_client) {
+    _client = {
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn(),
+      defaults: {
+        baseURL: '/test-api-root',
+        timeout: 10000,
+      },
+    }
   }
-
-  getClient.mockReturnValue(_spy)
-
-  return _spy
+  return _client
 }
 
-export function mockGet(response) {
-  _spy = {get: null}
-  getClient.mockReturnValue(_spy)
-
-  if (response.status > 399) {
-    _spy.get = jest.fn(() => Promise.reject({response}))
-    return
-  }
-  _spy.get = jest.fn(() => Promise.resolve(response))
-
-}
-
-export function destroySpy() {
-  getClient.mockReset()  // or .mockClear()???
-  _spy = {}
-}
-
-export function mockInitialize(response) {
-  return response
+export function initialize(): boolean {
+  _client = null
+  return true
 }

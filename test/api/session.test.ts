@@ -16,10 +16,20 @@
 
 import {assert} from 'chai'
 import * as sinon from 'sinon'
-import axios from 'axios'
+import axios, {AxiosInstance} from 'axios'
 import * as service from '../../src/api/session'
+import * as geoserver from '../../src/api/geoserver'
+import {Sinon} from "sinon";
 
-jest.mock('../../src/api/session')
+jest.unmock('../../src/api/session')
+jest.mock('../../src/config')
+
+interface FakeClient {
+  get: Sinon.SinonStub,
+  post: Sinon.SinonStub,
+  put: Sinon.SinonStub,
+  delete: Sinon.SinonStub,
+}
 
 /*
 describe('Session Service', () => {
@@ -36,32 +46,29 @@ describe('Session Service', () => {
     globalStubs.error.restore()
   })
 */
-let sessionStorage// = {setItem: null, getItem: null}
 const originalEntry = location.pathname + location.search
 
 beforeEach(() => {
-  sessionStorage = jest.fn()
-  sessionStorage.setItem = jest.fn()
-  sessionStorage.getItem = jest.fn()
-  sessionStorage.clear = jest.fn()
+  // Nothing
+  process.env.API_ROOT = '/test-api-root'
 })
 afterEach(() => {
   sessionStorage.clear()
   //history.replaceState(null, null, originalEntry)
 })
 
-    test('indicates when session exists', () => {
+    it('indicates when session exists', () => {
       sessionStorage.setItem('__timestamp__', '2017-01-12T00:00:00Z')
-      const exists = service.mockInitialize(true)
+      const exists = service.initialize()
       expect(exists).toBeTruthy()
     })
 
-    test('indicates when session does not exist', () => {
-      const exists = service.mockInitialize(false)
+    it('indicates when session does not exist', () => {
+      const exists = service.initialize()
       expect(exists).toBeFalsy()
     })
-
-    /*it('records entry URL', () => {
+/*
+    it('records entry URL', () => {
       history.replaceState(null, null, '/test-pathname?test-search')
       service.initialize()
       assert.equal(sessionStorage.getItem('__entry__'), '/test-pathname?test-search')
@@ -95,48 +102,52 @@ afterEach(() => {
       assert.isNull(sessionStorage.getItem('__entry__'))
     })
   })
-
+*/
   describe('getClient()', () => {
     let stub: Sinon.SinonStub
+    let client: FakeClient
 
     beforeEach(() => {
       stub = sinon.stub(axios, 'create')
+      client = service.getClient()
+      //client.get = jest.fn()
     })
 
     afterEach(() => {
       sessionStorage.clear()
       stub.restore()
+      client = null
     })
 
     it('creates axios instance', () => {
-      service.getClient()
+      //service.getClient()
       assert.equal(stub.callCount, 1)
     })
 
     it('creates axios instance with correct base URL', () => {
-      service.getClient()
-      assert.equal(stub.firstCall.args[0].baseURL, '/test-api-root')
+      //client = service.getClient()
+      expect(stub.firstCall.args[0].baseURL).toBe('/test-api-root')
     })
 
     it('creates axios instance with sensible timeout', () => {
-      service.getClient()
-      assert.isAbove(stub.firstCall.args[0].timeout, 3000)
-      assert.isBelow(stub.firstCall.args[0].timeout, 30001)
+      //client = service.getClient()
+      expect(stub.firstCall.args[0].timeout).toBeGreaterThan(3000)
+      expect(stub.firstCall.args[0].timeout).toBeLessThan(30001)
     })
 
     it('creates axios instance with correct CSRF header', () => {
-      service.getClient()
+      //service.getClient()
       assert.deepEqual(stub.firstCall.args[0].headers['X-Requested-With'], 'XMLHttpRequest')
     })
 
     it('reuses existing client instances', () => {
-      const client = {isTotallyAnAxiosInstance: true}
+      //const client = {isTotallyAnAxiosInstance: true}
       stub.returns(client)
       assert.strictEqual(service.getClient(), client)
     })
 
     it('can handle gratuitous invocations', () => {
-      const client = {isTotallyAnAxiosInstance: true}
+      //const client = {isTotallyAnAxiosInstance: true}
       stub.returns(client)
       assert.doesNotThrow(() => {
         for (let i = 0; i < 100; i++) {
@@ -144,7 +155,31 @@ afterEach(() => {
         }
       })
     })
-  })
+
+/*
+    describe('client functions', () => {
+      let stub: Sinon.SinonStub
+      let client
+
+      beforeEach(() => {
+        stub = sinon.stub(axios, 'create')
+        client = service.getClient()
+      })
+
+      afterEach(() => {
+        sessionStorage.clear()
+        stub.restore()
+        client = null
+      })
+
+*/
+      /*it('return response from client', () => {
+        client.get.mockRejectedValue(new Error('test failure'))
+        geoserver.lookup().catch(error => {
+          console.log(error)
+        })
+        assert.equal(sessionStorage.getItem('lorem'), undefined)
+      })*/
 
   describe('destroy()', () => {
     it('actually clears the session', () => {
@@ -152,11 +187,11 @@ afterEach(() => {
       sessionStorage.setItem('ipsum', '###########')
       sessionStorage.setItem('dolor', '###########')
       service.destroy()
-      assert.equal(sessionStorage.length, 0)
+      assert.equal(sessionStorage.getItem('lorem'), undefined)
     })
   })
 })
-*/
+
 //
 // Helpers
 //
