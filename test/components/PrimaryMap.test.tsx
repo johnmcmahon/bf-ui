@@ -63,33 +63,6 @@ describe('<PrimaryMap/>', () => {
     }
   })
 
-  it('renders', () => {
-    const wrapper = mount(
-      <PrimaryMap
-        bbox={_props.bbox}
-        catalogApiKey={_props.catalogApiKey}
-        detections={_props.detections}
-        frames={_props.frames}
-        highlightedFeature={_props.highlightedFeature}
-        imagery={_props.imagery}
-        isSearching={_props.isSearching}
-        logout={_props.logout}
-        mode={_props.mode}
-        selectedFeature={_props.selectedFeature}
-        shrunk={_props.shrunk}
-        view={_props.view}
-        wmsUrl={_props.wmsUrl}
-        onBoundingBoxChange={_props.onBoundingBoxChange}
-        onMapInitialization={_props.onMapInitialization}
-        onSearchPageChange={_props.onSearchPageChange}
-        onSelectFeature={_props.onSelectFeature}
-        onViewChange={_props.onViewChange}
-      />,
-    )
-    assert.equal(wrapper.find('.PrimaryMap-root').length, 1)
-    assert.equal(wrapper.find('.PrimaryMap-basemapSelect').length, 1)
-  })
-
   it('creates a map instance', () => {
     const wrapper = mount(
       <PrimaryMap
@@ -149,7 +122,7 @@ describe('<PrimaryMap/>', () => {
      */
 
     it('has correct center on init', function() {
-      this.timeout(3000)
+      //this.timeout(3000)
       const wrapper = getComponent({ basemapIndex: 0, center: [0, 0], zoom: 5.5 })
       return awaitMap(() => {
         const view = (wrapper.instance() as any as Internals).map.getView()
@@ -158,7 +131,7 @@ describe('<PrimaryMap/>', () => {
     })
 
     it('has correct zoom on init', function() {
-      this.timeout(3000)
+      //this.timeout(3000)
       const wrapper = getComponent({ basemapIndex: 0, center: [0, 0], zoom: 5.5 })
       return awaitMap(() => {
         const view = (wrapper.instance() as any as Internals).map.getView()
@@ -174,7 +147,7 @@ describe('<PrimaryMap/>', () => {
     })
 
     it('recenters map when `view` prop changes', function() {
-      this.timeout(3000)
+      //this.timeout(3000)
       const wrapper = getComponent({ basemapIndex: 0, center: [0, 0], zoom: 5.5 })
       wrapper.setProps({ view: { basemapIndex: 0, center: [30, 30], zoom: 5.5 } })
       return awaitMap(() => {
@@ -184,7 +157,7 @@ describe('<PrimaryMap/>', () => {
     })
 
     it('changes zoom when `view` prop changes', function() {
-      this.timeout(3000)
+      //this.timeout(3000)
       const wrapper = getComponent({ basemapIndex: 0, center: [0, 0], zoom: 5.5 })
       wrapper.setProps({ view: { basemapIndex: 0, center: [0, 0], zoom: 10.5 } })
       return awaitMap(() => {

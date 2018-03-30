@@ -42,7 +42,7 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/mocks/fileTransformer.js"
     },
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/"
+      "node_modules/(?!(ol)/)"
     ],
     "testMatch": [
       "**/test/components/PrimaryMap.test.+(ts|tsx)"
@@ -66,12 +66,14 @@
     "babel-core": "6.26.0",
     "babel-jest": "22.4.3",
     "babel-plugin-transform-es2015-modules-commonjs": "6.26.0",
+    "canvas-prebuilt": "1.6.5-prerelease.1",
     "chai": "3.5.0",
     "copy-webpack-plugin": "3.0.1",
     "css-loader": "0.23.1",
     "enzyme": "2.4.1",
     "file-loader": "0.8.5",
     "html-webpack-plugin": "2.30.1",
+    "jest-canvas-mock": "1.0.2",
     "jest-cli": "22.4.2",
     "postcss-cssnext": "2.9.0",
     "postcss-import": "8.0.2",
